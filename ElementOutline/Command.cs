@@ -62,10 +62,36 @@ namespace ElementOutline
             r => r.ElementId ) );
       }
 
+      // Map element id to its outline loops
+
+      Dictionary<int, JtLoops> elementLoops
+        = new Dictionary<int, JtLoops>();
+
+      int nFailures;
+
       foreach( ElementId id in ids )
       {
         Element e = doc.GetElement( id );
-        Debug.Print( e.Name );
+
+        Debug.Print( e.Name + " " 
+          + id.IntegerValue.ToString() );
+
+        nFailures = 0;
+
+        JtLoops loops 
+          = CmdUploadRooms.GetPlanViewBoundaryLoops(
+            e, false, ref nFailures );
+
+        if( 0 < nFailures )
+        {
+          Debug.Print( "{0}: {1}",
+            Util.ElementDescription( e ),
+            Util.PluralString( nFailures,
+              "extrusion analyser failure" ) );
+        }
+        CmdUploadRooms.ListLoops( e, loops );
+
+        elementLoops.Add( id.IntegerValue, loops );
       }
       return Result.Succeeded;
     }

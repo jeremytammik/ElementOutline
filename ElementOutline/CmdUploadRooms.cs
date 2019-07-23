@@ -20,7 +20,7 @@ using IWin32Window = System.Windows.Forms.IWin32Window;
 namespace ElementOutline
 {
   [Transaction( TransactionMode.ReadOnly )]
-  public class CmdUploadRooms : IExternalCommand
+  internal class CmdUploadRooms : IExternalCommand
   {
     #region RoomSelectionFilter
     class RoomSelectionFilter : ISelectionFilter
@@ -570,8 +570,9 @@ namespace ElementOutline
     /// If no geometry can be determined, use the 
     /// bounding box instead.
     /// </summary>
-    static JtLoops GetPlanViewBoundaryLoops(
+    internal static JtLoops GetPlanViewBoundaryLoops(
       Element e,
+      bool transformInstanceCoordsToSymbolCoords,
       ref int nFailures )
     {
       Autodesk.Revit.Creation.Application creapp
@@ -587,7 +588,8 @@ namespace ElementOutline
       {
         Document doc = e.Document;
 
-        if( e is FamilyInstance )
+        if( transformInstanceCoordsToSymbolCoords
+          && e is FamilyInstance )
         {
           // Retrieve family instance geometry 
           // transformed back to symbol definition
@@ -641,7 +643,7 @@ namespace ElementOutline
     /// List all the loops retrieved 
     /// from the given element.
     /// </summary>
-    static void ListLoops( Element e, JtLoops loops )
+    internal static void ListLoops( Element e, JtLoops loops )
     {
       int nLoops = loops.Count;
 
@@ -710,7 +712,7 @@ namespace ElementOutline
           nFailures = 0;
 
           JtLoops loops = GetPlanViewBoundaryLoops(
-            f, ref nFailures );
+            f, true, ref nFailures );
 
           if( 0 < nFailures )
           {
@@ -731,12 +733,8 @@ namespace ElementOutline
         furnitureInstances.Add(
           new JtPlacement2dInt( f ) );
       }
-      //IWin32Window revit_window
-      //  = new JtWindowHandle(
-      //    ComponentManager.ApplicationWindow ); // pre-2020
-
       IWin32Window revit_window
-        = new JtWindowHandle( hwnd ); // 2020
+        = new JtWindowHandle( hwnd );
 
       string caption = doc.Title
         + " : " + doc.GetElement( room.LevelId ).Name
