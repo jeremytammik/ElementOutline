@@ -588,24 +588,39 @@ namespace ElementOutline
       {
         Document doc = e.Document;
 
-        if( transformInstanceCoordsToSymbolCoords
-          && e is FamilyInstance )
+        if( e is FamilyInstance )
         {
-          // Retrieve family instance geometry 
-          // transformed back to symbol definition
-          // coordinate space by inverting the 
-          // family instance placement transformation
+          if( transformInstanceCoordsToSymbolCoords )
+          {
+            // Retrieve family instance geometry 
+            // transformed back to symbol definition
+            // coordinate space by inverting the 
+            // family instance placement transformation
 
-          LocationPoint lp = e.Location 
-            as LocationPoint;
+            LocationPoint lp = e.Location
+              as LocationPoint;
 
-          Transform t = Transform.CreateTranslation( 
-            -lp.Point );
+            Transform t = Transform.CreateTranslation(
+              -lp.Point );
 
-          Transform r = Transform.CreateRotationAtPoint(
-            XYZ.BasisZ, -lp.Rotation, lp.Point );
+            Transform r = Transform.CreateRotationAtPoint(
+              XYZ.BasisZ, -lp.Rotation, lp.Point );
 
-          geo = geo.GetTransformed( t * r );
+            geo = geo.GetTransformed( t * r );
+          }
+          else
+          {
+            Debug.Assert( 
+              1 == geo.Count<GeometryObject>(), 
+              "expected as single geometry instance" );
+
+            Debug.Assert( 
+              geo.First<GeometryObject>() is GeometryInstance,               
+              "expected as single geometry instance" );
+
+            geo = ( geo.First<GeometryObject>() 
+              as GeometryInstance ).GetInstanceGeometry();
+          }
         }
 
         loops = GetPlanViewBoundaryLoopsGeo( 
