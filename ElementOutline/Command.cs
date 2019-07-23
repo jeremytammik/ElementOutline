@@ -7,11 +7,12 @@ using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
+using System.Linq;
 #endregion
 
 namespace ElementOutline
 {
-  [Transaction( TransactionMode.Manual )]
+  [Transaction( TransactionMode.ReadOnly )]
   public class Command : IExternalCommand
   {
     public Result Execute(
@@ -24,33 +25,48 @@ namespace ElementOutline
       Application app = uiapp.Application;
       Document doc = uidoc.Document;
 
-      // Access current selection
+      IntPtr hwnd = uiapp.MainWindowHandle;
+
+      if( null == doc )
+      {
+        Util.ErrorMsg( "Please run this command in a valid"
+          + " Revit project document." );
+        return Result.Failed;
+      }
+
+      // Do we have any pre-selected elements?
 
       Selection sel = uidoc.Selection;
 
-      // Retrieve elements from database
+      ICollection<ElementId> ids = sel.GetElementIds();
 
-      FilteredElementCollector col
-        = new FilteredElementCollector( doc )
-          .WhereElementIsNotElementType()
-          .OfCategory( BuiltInCategory.INVALID )
-          .OfClass( typeof( Wall ) );
+      // If no elements were pre-selected, 
+      // prompt for post-selection
 
-      // Filtered element collector is iterable
-
-      foreach( Element e in col )
+      if( null == ids || 0 == ids.Count )
       {
+        IList<Reference> refs = null;
+
+        try
+        {
+          refs = sel.PickObjects( ObjectType.Element,
+            "Please select elements for 2D outline generation." );
+        }
+        catch( Autodesk.Revit.Exceptions
+          .OperationCanceledException )
+        {
+          return Result.Cancelled;
+        }
+        ids = new List<ElementId>(
+          refs.Select<Reference, ElementId>(
+            r => r.ElementId ) );
+      }
+
+      foreach( ElementId id in ids )
+      {
+        Element e = doc.GetElement( id );
         Debug.Print( e.Name );
       }
-
-      // Modify document within a transaction
-
-      using( Transaction tx = new Transaction( doc ) )
-      {
-        tx.Start( "Transaction Name" );
-        tx.Commit();
-      }
-
       return Result.Succeeded;
     }
   }
