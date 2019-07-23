@@ -35,7 +35,7 @@ using System.Runtime.InteropServices;
 // History:
 //
 // 2019-07-23 2020.0.0.0 unchanged code extracted from RoomEditorApp
-// 2019-07-23 2020.0.0.1 implemented access to geometry instance geometry, first successful run
+// 2019-07-23 2020.0.0.1 implemented access to instance geometry, first successful run
 //
 [assembly: AssemblyVersion( "2020.0.0.1" )]
 [assembly: AssemblyFileVersion( "2020.0.0.1" )]
