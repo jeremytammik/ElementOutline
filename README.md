@@ -9,7 +9,7 @@ The goal is to export the 2D outlines of Revit `Element` instances, i.e., for ea
 
 Additional requirements:
 
-- Address all elements that might be built as part of the construction, including wall, floor, railing, ceiling, mechanical duct, panel, plumbing pipe.
+- Address family instances as well as elements that might be built as part of the construction, including wall, floor, railing, ceiling, mechanical duct, panel, plumbing pipe.
 - Generate a separate outline in place for each element, directly in its appropriate location and orientation.
 - Output the result in a simple text file.
 
