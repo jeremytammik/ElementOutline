@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Text>Command ElementOutline</Text>
+    <Description>Some description for ElementOutline</Description>
+    <Assembly>ElementOutline.dll</Assembly>
+    <FullClassName>ElementOutline.Command</FullClassName>
+    <ClientId>cc311594-d26d-4f64-9dc7-71c43d27fbf6</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+  <AddIn Type="Application">
+    <Name>Application ElementOutline</Name>
+    <Assembly>ElementOutline.dll</Assembly>
+    <FullClassName>ElementOutline.App</FullClassName>
+    <ClientId>7aa41f8d-c249-473d-afeb-1959bcb4c663</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>
