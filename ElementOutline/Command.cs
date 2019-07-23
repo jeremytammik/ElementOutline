@@ -109,7 +109,7 @@ namespace ElementOutline
       string path = "C:/tmp";
 
       path = Path.Combine( path,
-        doc.Title + "_element_outline.txt" );
+        doc.Title + "_element_outline.json" );
 
       using( StreamWriter s = new StreamWriter( path ) )
       {
@@ -120,7 +120,8 @@ namespace ElementOutline
           ElementId id = new ElementId( key );
           Element e = doc.GetElement( id );
 
-          s.WriteLine( "{0} id {1} uid {2}: {3}",
+          s.WriteLine( 
+            "{{\"name\":\"{0}\", \"id\":\"{1}\", \"uid\":\"{2}\", \"svg_path\":\"{3}\"}}",
             e.Name, e.Id, e.UniqueId, 
             elementLoops[key].SvgPath );
         }
