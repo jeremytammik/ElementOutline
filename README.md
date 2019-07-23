@@ -13,7 +13,7 @@ Additional requirements:
 - Generate a separate outline in place for each element, directly in its appropriate location and orientation.
 - Output the result in a simple text file.
 
-The approach that I implemented for the room editor is actually not based on the 2D view at all, but on the element geometry solids in the 3D view and the result of applying
+The approach that I implemented for the room editor is actually not based on the 2D view, but on the element geometry solids in the 3D view and the result of applying
 the [`ExtrusionAnalyzer` class](https://www.revitapidocs.com/2020/ba9e3283-6868-8834-e8bf-2ea9e7358930.htm) to them,
 which is a vertical projection of the 3D element shape onto the 2D XY plane.
 This apporach is described in detail in the discussion on
@@ -25,11 +25,11 @@ As you can see there, they are more detailed and exact than the standard 2D Revi
 
 The standard plan view of the default desk and chair components look like this in Revit:
 
-<img src="img/desk_and_chair_plan.png" alt="Plan view of desk and chair in Revit" width="200"/>
+<img src="img/desk_and_chair_plan.png" alt="Plan view of desk and chair in Revit" title="Plan view of desk and chair in Revit" width="318"/>
 
 The loops exported by the RoomEditorApp add-in for the same desk and chair look like this instead:
 
-<img src="img/desk_and_chair_loops.png" alt="Desk and chair loops in GeoSnoop"/>
+<img src="img/desk_and_chair_loops.png" alt="Desk and chair loops in GeoSnoop" title="Desk and chair loops in GeoSnoop" width="318"/>
 
 E.g., for the desk, you notice the little bulges for the desk drawer handles sticking out a little bit beyond the desktop surface, whereas, for the chair, the arm rests are missing.
 
