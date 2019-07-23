@@ -41,7 +41,7 @@ namespace ElementOutline
 
       ICollection<ElementId> ids = sel.GetElementIds();
 
-      // If no elements were pre-selected, 
+      // If no elements were pre-selected,
       // prompt for post-selection
 
       if( null == ids || 0 == ids.Count )
@@ -74,12 +74,12 @@ namespace ElementOutline
       {
         Element e = doc.GetElement( id );
 
-        Debug.Print( e.Name + " " 
+        Debug.Print( e.Name + " "
           + id.IntegerValue.ToString() );
 
         nFailures = 0;
 
-        JtLoops loops 
+        JtLoops loops
           = CmdUploadRooms.GetPlanViewBoundaryLoops(
             e, false, ref nFailures );
 
@@ -95,7 +95,7 @@ namespace ElementOutline
         elementLoops.Add( id.IntegerValue, loops );
       }
 
-      // GetTempPath returns a weird GUID-named subdirectory 
+      // GetTempPath returns a weird GUID-named subdirectory
       // created by Revit, so we will not use that, e.g.,
       // C:\Users\tammikj\AppData\Local\Temp\bfd59506-2dff-4b0f-bbe4-31587fcaf508
 
@@ -116,7 +116,7 @@ namespace ElementOutline
           Element e = doc.GetElement( id );
 
           s.WriteLine( "{0} id {1} uid {2}: {3}",
-            e.Name, e.Id, e.UniqueId, 
+            e.Name, e.Id, e.UniqueId,
             elementLoops[key].SvgPath );
         }
         s.Close();
