@@ -65,6 +65,7 @@
     <Compile Include="ContiguousCurveSorter.cs" />
     <Compile Include="ElementEqualityComparer.cs" />
     <Compile Include="GeoSnoop.cs" />
+    <Compile Include="EdgeLoopRetriever.cs" />
     <Compile Include="JtBoundingBox2dInt.cs" />
     <Compile Include="JtLoop.cs" />
     <Compile Include="JtLoops.cs" />

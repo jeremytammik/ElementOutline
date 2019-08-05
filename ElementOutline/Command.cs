@@ -16,6 +16,75 @@ namespace ElementOutline
   [Transaction( TransactionMode.ReadOnly )]
   public class Command : IExternalCommand
   {
+    /// <summary>
+    /// Retrieve plan view boundary loops from element 
+    /// solids using ExtrusionAnalyzer.
+    /// </summary>
+    static Dictionary<int, JtLoops> GetSolidLoops(
+      Document doc,
+      ICollection<ElementId> ids )
+    {
+      Dictionary<int, JtLoops> solidLoops
+        = new Dictionary<int, JtLoops>();
+
+      int nFailures;
+
+      foreach( ElementId id in ids )
+      {
+        Element e = doc.GetElement( id );
+
+        if( e is Dimension )
+        {
+          continue;
+        }
+
+        Debug.Print( e.Name + " "
+          + id.IntegerValue.ToString() );
+
+        nFailures = 0;
+
+        JtLoops loops
+          = CmdUploadRooms.GetSolidPlanViewBoundaryLoops(
+            e, false, ref nFailures );
+
+        if( 0 < nFailures )
+        {
+          Debug.Print( "{0}: {1}",
+            Util.ElementDescription( e ),
+            Util.PluralString( nFailures,
+              "extrusion analyser failure" ) );
+        }
+        CmdUploadRooms.ListLoops( e, loops );
+
+        solidLoops.Add( id.IntegerValue, loops );
+      }
+      return solidLoops;
+    }
+
+    static void ExportLoops(
+      string filepath,
+      Document doc,
+      Dictionary<int, JtLoops> loops )
+    {
+      using( StreamWriter s = new StreamWriter( filepath ) )
+      {
+        List<int> keys = new List<int>( loops.Keys );
+        keys.Sort();
+        foreach( int key in keys )
+        {
+          ElementId id = new ElementId( key );
+          Element e = doc.GetElement( id );
+
+          s.WriteLine(
+            "{{\"name\":\"{0}\", \"id\":\"{1}\", "
+            + "\"uid\":\"{2}\", \"svg_path\":\"{3}\"}}",
+            e.Name, e.Id, e.UniqueId,
+            loops[key].SvgPath );
+        }
+        s.Close();
+      }
+    }
+
     public Result Execute(
       ExternalCommandData commandData,
       ref string message,
@@ -63,42 +132,15 @@ namespace ElementOutline
             r => r.ElementId ) );
       }
 
+      // First attempt: create element 2D outline from
+      // element geometry solids using the ExtrusionAnalyzer;
+      // unfortunately, some elements have no valid solid,
+      // so this approach is not general enough.
+
       // Map element id to its solid outline loops
 
-      Dictionary<int, JtLoops> solidLoops
-        = new Dictionary<int, JtLoops>();
-
-      int nFailures;
-
-      foreach( ElementId id in ids )
-      {
-        Element e = doc.GetElement( id );
-
-        if( e is Dimension )
-        {
-          continue;
-        }
-
-        Debug.Print( e.Name + " " 
-          + id.IntegerValue.ToString() );
-
-        nFailures = 0;
-
-        JtLoops loops 
-          = CmdUploadRooms.GetSolidPlanViewBoundaryLoops(
-            e, false, ref nFailures );
-
-        if( 0 < nFailures )
-        {
-          Debug.Print( "{0}: {1}",
-            Util.ElementDescription( e ),
-            Util.PluralString( nFailures,
-              "extrusion analyser failure" ) );
-        }
-        CmdUploadRooms.ListLoops( e, loops );
-
-        solidLoops.Add( id.IntegerValue, loops );
-      }
+      Dictionary<int, JtLoops> solidLoops = GetSolidLoops( 
+        doc, ids );
 
       // GetTempPath returns a weird GUID-named subdirectory 
       // created by Revit, so we will not use that, e.g.,
@@ -108,26 +150,25 @@ namespace ElementOutline
 
       string path = "C:/tmp";
 
-      path = Path.Combine( path,
-        doc.Title + "_element_outline.json" );
+      string filepath = Path.Combine( path,
+        doc.Title + "_element_solid_outline.json" );
 
-      using( StreamWriter s = new StreamWriter( path ) )
-      {
-        List<int> keys = new List<int>( solidLoops.Keys );
-        keys.Sort();
-        foreach( int key in keys )
-        {
-          ElementId id = new ElementId( key );
-          Element e = doc.GetElement( id );
+      ExportLoops( filepath, doc, solidLoops );
 
-          s.WriteLine( 
-            "{{\"name\":\"{0}\", \"id\":\"{1}\", "
-            + "\"uid\":\"{2}\", \"svg_path\":\"{3}\"}}",
-            e.Name, e.Id, e.UniqueId, 
-            solidLoops[key].SvgPath );
-        }
-        s.Close();
-      }
+      // Second attempt: create element 2D outline from
+      // element geometry edges by projecting them onto 
+      // the XY plane and then following the outer contour
+      // counter-clockwise keeping to the right-most
+      // edge until a closed loop is achieved.
+
+      EdgeLoopRetriever edgeLooper 
+        = new EdgeLoopRetriever( doc, ids );
+
+      filepath = Path.Combine( path,
+         doc.Title + "_element_edge_outline.json" );
+
+      ExportLoops( filepath, doc, edgeLooper.Loops );
+
       return Result.Succeeded;
     }
   }
