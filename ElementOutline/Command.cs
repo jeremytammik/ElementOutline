@@ -85,7 +85,7 @@ namespace ElementOutline
         nFailures = 0;
 
         JtLoops loops 
-          = CmdUploadRooms.GetPlanViewBoundaryLoops(
+          = CmdUploadRooms.GetSolidPlanViewBoundaryLoops(
             e, false, ref nFailures );
 
         if( 0 < nFailures )
@@ -121,7 +121,8 @@ namespace ElementOutline
           Element e = doc.GetElement( id );
 
           s.WriteLine( 
-            "{{\"name\":\"{0}\", \"id\":\"{1}\", \"uid\":\"{2}\", \"svg_path\":\"{3}\"}}",
+            "{{\"name\":\"{0}\", \"id\":\"{1}\", "
+            + "\"uid\":\"{2}\", \"svg_path\":\"{3}\"}}",
             e.Name, e.Id, e.UniqueId, 
             elementLoops[key].SvgPath );
         }

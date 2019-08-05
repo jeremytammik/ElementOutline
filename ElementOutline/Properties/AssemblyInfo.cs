@@ -37,6 +37,7 @@ using System.Runtime.InteropServices;
 // 2019-07-23 2020.0.0.0 unchanged code extracted from RoomEditorApp
 // 2019-07-23 2020.0.0.1 implemented access to instance geometry, first successful run
 // 2019-07-23 2020.0.0.2 successful SvgPath text output
+// 2019-08-05 2020.0.0.3 renamed GetSolidPlanViewBoundaryLoops
 //
-[assembly: AssemblyVersion( "2020.0.0.2" )] 
-[assembly: AssemblyFileVersion( "2020.0.0.2" )] 
+[assembly: AssemblyVersion( "2020.0.0.3" )] 
+[assembly: AssemblyFileVersion( "2020.0.0.3" )] 

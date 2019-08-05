@@ -570,7 +570,7 @@ namespace ElementOutline
     /// If no geometry can be determined, use the 
     /// bounding box instead.
     /// </summary>
-    internal static JtLoops GetPlanViewBoundaryLoops(
+    internal static JtLoops GetSolidPlanViewBoundaryLoops(
       Element e,
       bool transformInstanceCoordsToSymbolCoords,
       ref int nFailures )
@@ -726,7 +726,7 @@ namespace ElementOutline
         {
           nFailures = 0;
 
-          JtLoops loops = GetPlanViewBoundaryLoops(
+          JtLoops loops = GetSolidPlanViewBoundaryLoops(
             f, true, ref nFailures );
 
           if( 0 < nFailures )
