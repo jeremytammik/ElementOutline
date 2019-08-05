@@ -63,9 +63,9 @@ namespace ElementOutline
             r => r.ElementId ) );
       }
 
-      // Map element id to its outline loops
+      // Map element id to its solid outline loops
 
-      Dictionary<int, JtLoops> elementLoops
+      Dictionary<int, JtLoops> solidLoops
         = new Dictionary<int, JtLoops>();
 
       int nFailures;
@@ -97,7 +97,7 @@ namespace ElementOutline
         }
         CmdUploadRooms.ListLoops( e, loops );
 
-        elementLoops.Add( id.IntegerValue, loops );
+        solidLoops.Add( id.IntegerValue, loops );
       }
 
       // GetTempPath returns a weird GUID-named subdirectory 
@@ -113,7 +113,7 @@ namespace ElementOutline
 
       using( StreamWriter s = new StreamWriter( path ) )
       {
-        List<int> keys = new List<int>( elementLoops.Keys );
+        List<int> keys = new List<int>( solidLoops.Keys );
         keys.Sort();
         foreach( int key in keys )
         {
@@ -124,7 +124,7 @@ namespace ElementOutline
             "{{\"name\":\"{0}\", \"id\":\"{1}\", "
             + "\"uid\":\"{2}\", \"svg_path\":\"{3}\"}}",
             e.Name, e.Id, e.UniqueId, 
-            elementLoops[key].SvgPath );
+            solidLoops[key].SvgPath );
         }
         s.Close();
       }
