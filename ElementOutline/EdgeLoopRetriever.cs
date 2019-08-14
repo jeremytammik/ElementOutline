@@ -22,6 +22,54 @@ namespace ElementOutline
       = new Dictionary<int, JtLoops>();
 
     /// <summary>
+    /// Recursively rtrieve all curves and solids from
+    /// thew given geometry
+    /// </summary>
+    static void AddCurvesAndSolids( 
+      GeometryElement geoElem,
+      List<Curve> curves,
+      List<Solid> solids )
+    {
+      foreach( GeometryObject obj in geoElem )
+      {
+        Curve curve = obj as Curve;
+        if( null != curve )
+        {
+          curves.Add( curve );
+          continue;
+        }
+        Solid solid = obj as Solid;
+        if( null != solid )
+        {
+          solids.Add( solid );
+          continue;
+        }
+        GeometryInstance inst = obj as GeometryInstance;
+        if( null != inst )
+        {
+          GeometryElement txGeoElem
+            = inst.GetInstanceGeometry( 
+              inst.Transform );
+
+          AddCurvesAndSolids( txGeoElem, 
+            curves, solids );
+        }
+      }
+    }
+
+    List<Curve> GetCurves( Element e, Options opt )
+    {
+      GeometryElement geo = e.get_Geometry( opt );
+
+      List<Curve> curves = new List<Curve>();
+      List<Solid> solids = new List<Solid>();
+
+      AddCurvesAndSolids( geo, curves, solids );
+
+      return curves;
+    }
+
+    /// <summary>
     /// Return loops for outer 2D outline 
     /// of given element.
     /// - Retrieve geometry curves from edges 
@@ -31,21 +79,48 @@ namespace ElementOutline
     /// - Go down, then right
     /// - Keep following right-mostconection until closed loop is found
     /// </summary>
-    JtLoops GetLoops( Element e )
+    JtLoops GetLoops( Element e, Options opt )
     {
+
+      List<Curve> curves = GetCurves( e, opt );
       JtLoops loops = null;
       return loops;
     }
 
-    public EdgeLoopRetriever( 
-      Document doc,
+    public EdgeLoopRetriever(
+      Options opt,
       ICollection<ElementId> ids )
     {
+      Document doc = opt.View.Document;
+
+      List<Curve> curves = new List<Curve>();
+      List<Solid> solids = new List<Solid>();
+
       foreach( ElementId id in ids )
       {
-        Element e = doc.GetElement( id );
+        curves.Clear();
+        solids.Clear();
 
-        JtLoops loops = GetLoops( e );
+        // Retrieve element geometry
+
+        Element e = doc.GetElement( id );
+        GeometryElement geo = e.get_Geometry( opt );
+        AddCurvesAndSolids( geo, curves, solids );
+
+        // Extract curves from solids
+
+        //AddCurvesFromSolids( curves, solids );
+
+        // Flatten and simplify to line unique segments 
+        // of non-zero length with 2D integer millimetre 
+        // coordinates
+
+        // Chop at each intersection, eliminating all
+        // non-endpoint intersections
+
+        // Contour following
+
+        JtLoops loops = GetLoops( e, opt );
 
         _loops.Add( id.IntegerValue, loops );
       }

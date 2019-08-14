@@ -156,13 +156,21 @@ namespace ElementOutline
       ExportLoops( filepath, doc, solidLoops );
 
       // Second attempt: create element 2D outline from
-      // element geometry edges by projecting them onto 
-      // the XY plane and then following the outer contour
+      // element geometry edges in current view by 
+      // projecting them onto the XY plane and then 
+      // following the outer contour
       // counter-clockwise keeping to the right-most
       // edge until a closed loop is achieved.
 
+      View view = doc.ActiveView;
+
+      Options opt = new Options
+      {
+        View = view
+      };
+
       EdgeLoopRetriever edgeLooper 
-        = new EdgeLoopRetriever( doc, ids );
+        = new EdgeLoopRetriever( opt, ids );
 
       filepath = Path.Combine( path,
          doc.Title + "_element_edge_outline.json" );
