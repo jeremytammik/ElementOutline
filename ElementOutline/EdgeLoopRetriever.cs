@@ -134,6 +134,8 @@ namespace ElementOutline
         // of non-zero length with 2D integer millimetre 
         // coordinates
 
+
+
         // Chop at each intersection, eliminating all
         // non-endpoint intersections
 
