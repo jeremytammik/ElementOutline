@@ -22,10 +22,10 @@ namespace ElementOutline
       = new Dictionary<int, JtLoops>();
 
     /// <summary>
-    /// Recursively rtrieve all curves and solids from
-    /// thew given geometry
+    /// Recursively retrieve all curves and solids 
+    /// from the given geometry
     /// </summary>
-    static void AddCurvesAndSolids( 
+    static void AddCurvesAndSolids(
       GeometryElement geoElem,
       List<Curve> curves,
       List<Solid> solids )
@@ -48,11 +48,30 @@ namespace ElementOutline
         if( null != inst )
         {
           GeometryElement txGeoElem
-            = inst.GetInstanceGeometry( 
+            = inst.GetInstanceGeometry(
               inst.Transform );
 
-          AddCurvesAndSolids( txGeoElem, 
+          AddCurvesAndSolids( txGeoElem,
             curves, solids );
+          continue;
+        }
+        Debug.Assert( false,
+          "expected curve, solid or instance" );
+      }
+    }
+
+    /// <summary>
+    /// Recursively all curves from the given solids 
+    /// </summary>
+    static void AddCurvesFromSolids( 
+      List<Curve> curves,
+      List<Solid> solids )
+    {
+      foreach( Solid solid in solids )
+      {
+        foreach( Edge e in solid.Edges )
+        {
+          curves.Add( e.AsCurve() );
         }
       }
     }
@@ -69,16 +88,6 @@ namespace ElementOutline
       return curves;
     }
 
-    /// <summary>
-    /// Return loops for outer 2D outline 
-    /// of given element.
-    /// - Retrieve geometry curves from edges 
-    /// - Convert to linear segments and 2D integer coordinates
-    /// - Convert to non-intersecting line segments
-    /// - Start from left-hand bottom point
-    /// - Go down, then right
-    /// - Keep following right-mostconection until closed loop is found
-    /// </summary>
     JtLoops GetLoops( Element e, Options opt )
     {
 
@@ -87,6 +96,16 @@ namespace ElementOutline
       return loops;
     }
 
+    /// <summary>
+    /// Return loops for outer 2D outline 
+    /// of the given element ids.
+    /// - Retrieve geometry curves from edges 
+    /// - Convert to linear segments and 2D integer coordinates
+    /// - Convert to non-intersecting line segments
+    /// - Start from left-hand bottom point
+    /// - Go down, then right
+    /// - Keep following right-mostconection until closed loop is found
+    /// </summary>
     public EdgeLoopRetriever(
       Options opt,
       ICollection<ElementId> ids )
@@ -109,7 +128,7 @@ namespace ElementOutline
 
         // Extract curves from solids
 
-        //AddCurvesFromSolids( curves, solids );
+        AddCurvesFromSolids( curves, solids );
 
         // Flatten and simplify to line unique segments 
         // of non-zero length with 2D integer millimetre 
