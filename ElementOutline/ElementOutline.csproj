@@ -68,6 +68,7 @@
     <Compile Include="EdgeLoopRetriever.cs" />
     <Compile Include="JtBoundingBox2dInt.cs" />
     <Compile Include="JtLine.cs" />
+    <Compile Include="JtLineCollection.cs" />
     <Compile Include="JtLoop.cs" />
     <Compile Include="JtLoops.cs" />
     <Compile Include="JtPlacement2dInt.cs" />
