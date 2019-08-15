@@ -42,6 +42,7 @@ using System.Runtime.InteropServices;
 // 2019-08-05 2020.0.0.3 implemented GetEdgeLoops framework
 // 2019-08-05 2020.0.0.3 implemented EdgeLoopRetriever framework
 // 2019-08-07 2020.0.0.4 started working on EdgeLoopRetriever.GetLoops
+// 2019-08-15 2020.0.0.4 implemented JtLineCollection constructor from list of curves
 //
 [assembly: AssemblyVersion( "2020.0.0.4" )] 
 [assembly: AssemblyFileVersion( "2020.0.0.4" )] 

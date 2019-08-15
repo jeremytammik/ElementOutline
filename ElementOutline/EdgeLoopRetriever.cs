@@ -134,7 +134,8 @@ namespace ElementOutline
         // of non-zero length with 2D integer millimetre 
         // coordinates
 
-
+        JtLineCollection lines = new JtLineCollection( 
+          curves );
 
         // Chop at each intersection, eliminating all
         // non-endpoint intersections
