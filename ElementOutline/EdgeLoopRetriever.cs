@@ -1,8 +1,6 @@
 ﻿#region Namespaces
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using Autodesk.Revit.DB;
 #endregion
 
@@ -76,25 +74,25 @@ namespace ElementOutline
       }
     }
 
-    List<Curve> GetCurves( Element e, Options opt )
-    {
-      GeometryElement geo = e.get_Geometry( opt );
+    //List<Curve> GetCurves( Element e, Options opt )
+    //{
+    //  GeometryElement geo = e.get_Geometry( opt );
 
-      List<Curve> curves = new List<Curve>();
-      List<Solid> solids = new List<Solid>();
+    //  List<Curve> curves = new List<Curve>();
+    //  List<Solid> solids = new List<Solid>();
 
-      AddCurvesAndSolids( geo, curves, solids );
+    //  AddCurvesAndSolids( geo, curves, solids );
 
-      return curves;
-    }
+    //  return curves;
+    //}
 
-    JtLoops GetLoops( Element e, Options opt )
-    {
+    //JtLoops GetLoops( Element e, Options opt )
+    //{
 
-      List<Curve> curves = GetCurves( e, opt );
-      JtLoops loops = null;
-      return loops;
-    }
+    //  List<Curve> curves = GetCurves( e, opt );
+    //  JtLoops loops = null;
+    //  return loops;
+    //}
 
     /// <summary>
     /// Return loops for outer 2D outline 
@@ -137,12 +135,14 @@ namespace ElementOutline
         JtLineCollection lines = new JtLineCollection( 
           curves );
 
-        // Chop at each intersection, eliminating all
-        // non-endpoint intersections
+        // Todo: Chop at each intersection, eliminating 
+        // all non-endpoint intersections
 
         // Contour following
 
-        JtLoops loops = GetLoops( e, opt );
+        JtLoop loop = lines.GetOutline();
+        JtLoops loops = new JtLoops( 1 );
+        loops.Add( loop );
 
         _loops.Add( id.IntegerValue, loops );
       }

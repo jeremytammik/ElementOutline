@@ -63,7 +63,6 @@
     <Compile Include="CmdUploadRooms.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="ContiguousCurveSorter.cs" />
-    <Compile Include="CountourFollower.cs" />
     <Compile Include="ElementEqualityComparer.cs" />
     <Compile Include="GeoSnoop.cs" />
     <Compile Include="EdgeLoopRetriever.cs" />

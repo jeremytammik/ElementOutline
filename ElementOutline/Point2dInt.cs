@@ -71,6 +71,27 @@ namespace ElementOutline
     }
 
     /// <summary>
+    /// Distance from this point to another point.
+    /// </summary>
+    public double DistanceTo( Point2dInt a )
+    {
+      int dy = a.Y - Y;
+      var dx = a.X - X;
+      return Math.Sqrt( dx * dx + dy * dy );
+    }
+
+    /// <summary>
+    /// Angle of line from this point to another point
+    /// in the range (-pi,pi], just like Math.Atan2.
+    /// </summary>
+    public double AngleTo( Point2dInt a )
+    {
+      int dy = a.Y - Y;
+      int dx = a.X - X;
+      return Math.Atan2( dy, dx );
+    }
+
+    /// <summary>
     /// Display as a string.
     /// </summary>
     public override string ToString()
