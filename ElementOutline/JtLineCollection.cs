@@ -209,10 +209,16 @@ namespace ElementOutline
         Debug.Assert( n + 1 == route.Count, 
           "expected exactly one candidate added" );
 
+        Debug.Assert( this[ cand ].Contains( current ), 
+          "expected return path" );
+        this[ cand ].Remove( current );
+
         if(GetOutlineRecursion(route))
         {
           return true;
         }
+
+        this[ cand ].Add( current );
 
         Debug.Assert( n + 1 == route.Count, 
           "expected exactly one candidate added" );

@@ -141,10 +141,14 @@ namespace ElementOutline
         // Contour following
 
         JtLoop loop = lines.GetOutline();
-        JtLoops loops = new JtLoops( 1 );
-        loops.Add( loop );
 
-        _loops.Add( id.IntegerValue, loops );
+        if( null != loop )
+        {
+          JtLoops loops = new JtLoops( 1 );
+          loops.Add( loop );
+
+          _loops.Add( id.IntegerValue, loops );
+        }
       }
     }
 
