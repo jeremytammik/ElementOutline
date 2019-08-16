@@ -22,6 +22,7 @@ namespace ElementOutline
     /// created by Revit, so we will not use that, e.g.,
     /// C:\Users\tammikj\AppData\Local\Temp\bfd59506-2dff-4b0f-bbe4-31587fcaf508
     /// string path = Path.GetTempPath();
+    /// @"C:\Users\jta\AppData\Local\Temp"
     /// </summary>
     string _output_folder_path = "C:/tmp";
 
@@ -88,7 +89,7 @@ namespace ElementOutline
             "{{\"name\":\"{0}\", \"id\":\"{1}\", "
             + "\"uid\":\"{2}\", \"svg_path\":\"{3}\"}}",
             e.Name, e.Id, e.UniqueId,
-            loops[key].SvgPath );
+            loops[ key ].SvgPath );
         }
         s.Close();
       }
@@ -113,14 +114,15 @@ namespace ElementOutline
         return Result.Failed;
       }
 
+      // Ensure that output folder exists -- always fails
 
-      if(!File.Exists( _output_folder_path ) )
-      {
-        Util.ErrorMsg( string.Format(
-          "Please ensure that output folder '{0}' exists",
-          _output_folder_path ) );
-        return Result.Failed;
-      }
+      //if( !File.Exists( _output_folder_path ) )
+      //{
+      //  Util.ErrorMsg( string.Format(
+      //    "Please ensure that output folder '{0}' exists",
+      //    _output_folder_path ) );
+      //  return Result.Failed;
+      //}
 
       // Do we have any pre-selected elements?
 
@@ -157,7 +159,7 @@ namespace ElementOutline
 
       // Map element id to its solid outline loops
 
-      Dictionary<int, JtLoops> solidLoops = GetSolidLoops( 
+      Dictionary<int, JtLoops> solidLoops = GetSolidLoops(
         doc, ids );
 
       string filepath = Path.Combine( _output_folder_path,
@@ -179,7 +181,7 @@ namespace ElementOutline
         View = view
       };
 
-      EdgeLoopRetriever edgeLooper 
+      EdgeLoopRetriever edgeLooper
         = new EdgeLoopRetriever( opt, ids );
 
       filepath = Path.Combine( _output_folder_path,

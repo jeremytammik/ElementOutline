@@ -76,23 +76,43 @@ namespace ElementOutline
           AddSegment( a, b );
         }
 
-        int nSegments = (int) Math.Round( len / _step_len,
+        int nMaxSegments = (int) Math.Round( len / _step_len,
           MidpointRounding.AwayFromZero );
 
-        double sp = c.GetEndParameter( 0 );
-        double ep = c.GetEndParameter( 1 );
-        double step = (ep - sp) / nSegments;
+        IList<XYZ> pts = c.Tessellate();
 
-        double t = sp + step;
+        int n = pts.Count;
 
-        for( int i = 0; i < nSegments; ++i, t += step )
+        if( n > nMaxSegments )
         {
-          b = new Point2dInt( c.Evaluate( t, false ) );
+          double sp = c.GetEndParameter( 0 );
+          double ep = c.GetEndParameter( 1 );
+          double step = (ep - sp) / nMaxSegments;
 
-          if( 0 != a.CompareTo( b ) )
+          double t = sp + step;
+
+          for( int i = 0; i < nMaxSegments; ++i, t += step )
           {
-            AddSegment( a, b );
-            a = b;
+            b = new Point2dInt( c.Evaluate( t, false ) );
+
+            if( 0 != a.CompareTo( b ) )
+            {
+              AddSegment( a, b );
+              a = b;
+            }
+          }
+        }
+        else
+        {
+          for( int i = 1; i < n; ++i )
+          {
+            b = new Point2dInt( pts[i] );
+
+            if( 0 != a.CompareTo( b ) )
+            {
+              AddSegment( a, b );
+              a = b;
+            }
           }
         }
       }
@@ -111,7 +131,7 @@ namespace ElementOutline
         Debug.Assert( -Math.PI < current_angle,
           "expected current_angle in interval (-pi,pi]" );
 
-        Debug.Assert( current_angle <= -Math.PI, 
+        Debug.Assert( current_angle <= Math.PI, 
           "expected current_angle in interval (-pi,pi]" );
 
         _current = current;
