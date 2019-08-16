@@ -17,6 +17,15 @@ namespace ElementOutline
   public class Command : IExternalCommand
   {
     /// <summary>
+    /// Output folder path; 
+    /// GetTempPath returns a weird GUID-named subdirectory 
+    /// created by Revit, so we will not use that, e.g.,
+    /// C:\Users\tammikj\AppData\Local\Temp\bfd59506-2dff-4b0f-bbe4-31587fcaf508
+    /// string path = Path.GetTempPath();
+    /// </summary>
+    string _output_folder_path = "C:/tmp";
+
+    /// <summary>
     /// Retrieve plan view boundary loops from element 
     /// solids using ExtrusionAnalyzer.
     /// </summary>
@@ -104,6 +113,15 @@ namespace ElementOutline
         return Result.Failed;
       }
 
+
+      if(!File.Exists( _output_folder_path ) )
+      {
+        Util.ErrorMsg( string.Format(
+          "Please ensure that output folder '{0}' exists",
+          _output_folder_path ) );
+        return Result.Failed;
+      }
+
       // Do we have any pre-selected elements?
 
       Selection sel = uidoc.Selection;
@@ -142,15 +160,7 @@ namespace ElementOutline
       Dictionary<int, JtLoops> solidLoops = GetSolidLoops( 
         doc, ids );
 
-      // GetTempPath returns a weird GUID-named subdirectory 
-      // created by Revit, so we will not use that, e.g.,
-      // C:\Users\tammikj\AppData\Local\Temp\bfd59506-2dff-4b0f-bbe4-31587fcaf508
-
-      //string path = Path.GetTempPath();
-
-      string path = "C:/tmp";
-
-      string filepath = Path.Combine( path,
+      string filepath = Path.Combine( _output_folder_path,
         doc.Title + "_element_solid_outline.json" );
 
       ExportLoops( filepath, doc, solidLoops );
@@ -172,7 +182,7 @@ namespace ElementOutline
       EdgeLoopRetriever edgeLooper 
         = new EdgeLoopRetriever( opt, ids );
 
-      filepath = Path.Combine( path,
+      filepath = Path.Combine( _output_folder_path,
          doc.Title + "_element_edge_outline.json" );
 
       ExportLoops( filepath, doc, edgeLooper.Loops );
