@@ -106,7 +106,7 @@ namespace ElementOutline
         {
           for( int i = 1; i < n; ++i )
           {
-            b = new Point2dInt( pts[i] );
+            b = new Point2dInt( pts[ i ] );
 
             if( 0 != a.CompareTo( b ) )
             {
@@ -118,7 +118,10 @@ namespace ElementOutline
       }
     }
 
-
+    /// <summary>
+    /// Angle comparer class, taking into account the
+    /// direction we are coming from
+    /// </summary>
     class Point2dIntAngleComparer : IComparer<Point2dInt>
     {
       Point2dInt _current;
@@ -131,7 +134,7 @@ namespace ElementOutline
         Debug.Assert( -Math.PI < current_angle,
           "expected current_angle in interval (-pi,pi]" );
 
-        Debug.Assert( current_angle <= Math.PI, 
+        Debug.Assert( current_angle <= Math.PI,
           "expected current_angle in interval (-pi,pi]" );
 
         _current = current;
@@ -152,7 +155,7 @@ namespace ElementOutline
         double ax = _current.AngleTo( x ); // (-pi,pi]
         double ay = _current.AngleTo( y );
 
-        if( Util.IsEqual(ax,ay))
+        if( Util.IsEqual( ax, ay ) )
         {
           double dx = _current.DistanceTo( x );
           double dy = _current.DistanceTo( y );
@@ -168,7 +171,7 @@ namespace ElementOutline
           ay += 2 * Math.PI;
         }
         int d = ax.CompareTo( ay );
-        if(0==d)
+        if( 0 == d )
         {
           double dx = _current.DistanceTo( x );
           double dy = _current.DistanceTo( y );
@@ -186,7 +189,7 @@ namespace ElementOutline
       int n = route.Count;
       Point2dInt current = route[ n - 1 ];
       List<Point2dInt> candidates = this[ current ];
-      if(candidates.Contains(endpoint))
+      if( candidates.Contains( endpoint ) )
       {
         // A closed loop has been completed
         return true;
@@ -200,27 +203,27 @@ namespace ElementOutline
         ? -0.5 * Math.PI
         : route[ n - 2 ].AngleTo( current );
 
-      candidates.Sort( new Point2dIntAngleComparer( 
+      candidates.Sort( new Point2dIntAngleComparer(
         current, current_angle ) );
 
       foreach( Point2dInt cand in candidates )
       {
         route.Add( cand );
-        Debug.Assert( n + 1 == route.Count, 
+        Debug.Assert( n + 1 == route.Count,
           "expected exactly one candidate added" );
 
-        Debug.Assert( this[ cand ].Contains( current ), 
+        Debug.Assert( this[ cand ].Contains( current ),
           "expected return path" );
         this[ cand ].Remove( current );
 
-        if(GetOutlineRecursion(route))
+        if( GetOutlineRecursion( route ) )
         {
           return true;
         }
 
         this[ cand ].Add( current );
 
-        Debug.Assert( n + 1 == route.Count, 
+        Debug.Assert( n + 1 == route.Count,
           "expected exactly one candidate added" );
         route.RemoveAt( n );
       }
@@ -232,25 +235,36 @@ namespace ElementOutline
     }
 
     /// <summary>
-    /// Return the outline loop of all the line segments
+    /// Return the outline loops of all the line segments
     /// </summary>
-    public JtLoop GetOutline()
+    public JtLoops GetOutline()
     {
-      // Outline route taken so far
+      JtLoops loops = new JtLoops(1);
 
-      List<Point2dInt> route = new List<Point2dInt>(1);
+      while( 0 < Count )
+      {
+        // Outline route taken so far
 
-      // Start at minimum point
+        List<Point2dInt> route = new List<Point2dInt>( 1 );
 
-      route.Add( Keys.Min() );
+        // Start at minimum point
 
-      // Recursively search until a closed outline is found
+        route.Add( Keys.Min() );
 
-      bool closed = GetOutlineRecursion( route );
+        // Recursively search until a closed outline is found
 
-      return closed 
-        ? new JtLoop( route.ToArray() ) 
-        : null;
+        bool closed = GetOutlineRecursion( route );
+
+        loops.Add( new JtLoop( route.ToArray() ) );
+
+        if( closed )
+        {
+          // Eliminate all line segments entirely enclosed.
+          // Truncate line segments partially enclosed and remove the inner part.
+          // A line segment might cut through the entire loop, with both endpoints outside.
+        }
+      }
+      return loops;
     }
   }
 }

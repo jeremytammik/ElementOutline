@@ -45,7 +45,8 @@ using System.Runtime.InteropServices;
 // 2019-08-15 2020.0.0.4 implemented JtLineCollection constructor from list of curves
 // 2019-08-15 2020.0.0.4 implemented JtLineCollection.GetOutline
 // 2019-08-16 2020.0.0.5 added use of Tessellate in JtLineCollection constructor
-// 2019-08-16 2020.0.0.5 started debugging GetOutlineRecusive
+// 2019-08-16 2020.0.0.5 debugging GetOutlineRecusive
+// 2019-08-17 2020.0.0.6 started implementing support for multiple loops
 //
-[assembly: AssemblyVersion( "2020.0.0.5" )] 
-[assembly: AssemblyFileVersion( "2020.0.0.5" )] 
+[assembly: AssemblyVersion( "2020.0.0.6" )]
+[assembly: AssemblyFileVersion( "2020.0.0.6" )]

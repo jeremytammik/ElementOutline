@@ -138,17 +138,15 @@ namespace ElementOutline
         // Todo: Chop at each intersection, eliminating 
         // all non-endpoint intersections
 
-        // Contour following
+        // Contour following:
+        // Regardless whether loop is closed or not, add it regardless.
+        // Remove the line segments forming it and all contained within it.
+        // If one endpoint is within and one outside, we have a relevant intersection.
+        // Remove the line segment within, and shorten the line segment outside to the lloop edge.
 
-        JtLoop loop = lines.GetOutline();
+        JtLoops loops = lines.GetOutline();
 
-        if( null != loop )
-        {
-          JtLoops loops = new JtLoops( 1 );
-          loops.Add( loop );
-
-          _loops.Add( id.IntegerValue, loops );
-        }
+        _loops.Add( id.IntegerValue, loops );
       }
     }
 
