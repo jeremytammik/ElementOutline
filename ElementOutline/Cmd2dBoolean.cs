@@ -42,11 +42,31 @@ namespace ElementOutline
         return Result.Cancelled;
       }
 
+      // Third attempt: create the element 2D outline 
+      // from element solid faces and meshes in current 
+      // view by projecting them onto the XY plane and 
+      // executing 2d Boolean unions on them.
+
+      View view = doc.ActiveView;
+
+      Options opt = new Options
+      {
+        View = view
+      };
+
       Clipper c = new Clipper();
       List<List<IntPoint>> union = new List<List<IntPoint>>();
 
-      c.Execute( ClipType.ctUnion, union, 
+      c.Execute( ClipType.ctUnion, union,
         PolyFillType.pftPositive, PolyFillType.pftPositive );
+
+      Dictionary<int, JtLoops> booleanLoops 
+        = new Dictionary<int, JtLoops>( ids.Count );
+
+      string filepath = Path.Combine( Util.OutputFolderPath,
+         doc.Title + "_element_2d_boolean_outline.json" );
+
+      Util.ExportLoops( filepath, doc, booleanLoops );
 
       return Result.Succeeded;
     }

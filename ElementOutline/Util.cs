@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Autodesk.Revit.DB;
@@ -13,7 +14,7 @@ namespace ElementOutline
 {
   class Util
   {
-    #region Output folder
+    #region Output folder and export
     /// <summary>
     /// Output folder path; 
     /// GetTempPath returns a weird GUID-named subdirectory 
@@ -23,7 +24,31 @@ namespace ElementOutline
     /// @"C:\Users\jta\AppData\Local\Temp"
     /// </summary>
     public const string OutputFolderPath = "C:/tmp";
-    #endregion // Output folder
+
+    public static void ExportLoops(
+      string filepath,
+      Document doc,
+      Dictionary<int, JtLoops> loops )
+    {
+      using( StreamWriter s = new StreamWriter( filepath ) )
+      {
+        List<int> keys = new List<int>( loops.Keys );
+        keys.Sort();
+        foreach( int key in keys )
+        {
+          ElementId id = new ElementId( key );
+          Element e = doc.GetElement( id );
+
+          s.WriteLine(
+            "{{\"name\":\"{0}\", \"id\":\"{1}\", "
+            + "\"uid\":\"{2}\", \"svg_path\":\"{3}\"}}",
+            e.Name, e.Id, e.UniqueId,
+            loops[ key ].SvgPath );
+        }
+        s.Close();
+      }
+    }
+    #endregion // Output folder and export
 
     #region Element pre- or post-selection
     static public ICollection<ElementId> GetSelectedElements(

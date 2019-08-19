@@ -61,30 +61,6 @@ namespace ElementOutline
       return solidLoops;
     }
 
-    static void ExportLoops(
-      string filepath,
-      Document doc,
-      Dictionary<int, JtLoops> loops )
-    {
-      using( StreamWriter s = new StreamWriter( filepath ) )
-      {
-        List<int> keys = new List<int>( loops.Keys );
-        keys.Sort();
-        foreach( int key in keys )
-        {
-          ElementId id = new ElementId( key );
-          Element e = doc.GetElement( id );
-
-          s.WriteLine(
-            "{{\"name\":\"{0}\", \"id\":\"{1}\", "
-            + "\"uid\":\"{2}\", \"svg_path\":\"{3}\"}}",
-            e.Name, e.Id, e.UniqueId,
-            loops[ key ].SvgPath );
-        }
-        s.Close();
-      }
-    }
-
     public Result Execute(
       ExternalCommandData commandData,
       ref string message,
@@ -135,7 +111,7 @@ namespace ElementOutline
       string filepath = Path.Combine( Util.OutputFolderPath,
         doc.Title + "_element_solid_outline.json" );
 
-      ExportLoops( filepath, doc, solidLoops );
+      Util.ExportLoops( filepath, doc, solidLoops );
 
       // Second attempt: create element 2D outline from
       // element geometry edges in current view by 
@@ -157,7 +133,7 @@ namespace ElementOutline
       filepath = Path.Combine( Util.OutputFolderPath,
          doc.Title + "_element_edge_outline.json" );
 
-      ExportLoops( filepath, doc, edgeLooper.Loops );
+      Util.ExportLoops( filepath, doc, edgeLooper.Loops );
 
       return Result.Succeeded;
     }
