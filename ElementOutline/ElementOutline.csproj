@@ -61,7 +61,7 @@
   <ItemGroup>
     <Compile Include="App.cs" />
     <Compile Include="CmdUploadRooms.cs" />
-    <Compile Include="Command.cs" />
+    <Compile Include="CmdContourFollower.cs" />
     <Compile Include="ContiguousCurveSorter.cs" />
     <Compile Include="ElementEqualityComparer.cs" />
     <Compile Include="GeoSnoop.cs" />
@@ -81,7 +81,7 @@
     <Content Include="ElementOutline.addin" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Y:\j\src\rvt\clipper_library\clipper_library.csproj">
+    <ProjectReference Include="..\clipper_library\clipper_library.csproj">
       <Project>{9b062971-a88e-4a3d-b3c9-12b78d15fa66}</Project>
       <Name>clipper_library</Name>
     </ProjectReference>

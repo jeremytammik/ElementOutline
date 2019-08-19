@@ -14,7 +14,7 @@ using System.IO;
 namespace ElementOutline
 {
   [Transaction( TransactionMode.ReadOnly )]
-  public class Command : IExternalCommand
+  public class CmdContourFollower : IExternalCommand
   {
     /// <summary>
     /// Output folder path; 
