@@ -2,15 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using Autodesk.Revit.UI.Selection;
 #endregion // Namespaces
 
 namespace ElementOutline
 {
   class Util
   {
+    #region Output folder
     /// <summary>
     /// Output folder path; 
     /// GetTempPath returns a weird GUID-named subdirectory 
@@ -20,8 +23,44 @@ namespace ElementOutline
     /// @"C:\Users\jta\AppData\Local\Temp"
     /// </summary>
     public const string OutputFolderPath = "C:/tmp";
+    #endregion // Output folder
 
-    #region Geometrical Comparison
+    #region Element pre- or post-selection
+    static public ICollection<ElementId> GetSelectedElements(
+      UIDocument uidoc )
+    {
+      // Do we have any pre-selected elements?
+
+      Selection sel = uidoc.Selection;
+
+      ICollection<ElementId> ids = sel.GetElementIds();
+
+      // If no elements were pre-selected, 
+      // prompt for post-selection
+
+      if( null == ids || 0 == ids.Count )
+      {
+        IList<Reference> refs = null;
+
+        try
+        {
+          refs = sel.PickObjects( ObjectType.Element,
+            "Please select elements for 2D outline generation." );
+        }
+        catch( Autodesk.Revit.Exceptions
+          .OperationCanceledException )
+        {
+          return ids;
+        }
+        ids = new List<ElementId>(
+          refs.Select<Reference, ElementId>(
+            r => r.ElementId ) );
+      }
+      return ids;
+    }
+    #endregion // Element pre- or post-selection
+
+    #region Geometrical comparison
     const double _eps = 1.0e-9;
 
     public static bool IsZero(
@@ -40,7 +79,7 @@ namespace ElementOutline
     {
       return IsZero( b - a );
     }
-    #endregion // Geometrical Comparison
+    #endregion // Geometrical comparison
 
     #region Unit conversion
     const double _feet_to_mm = 25.4 * 12;

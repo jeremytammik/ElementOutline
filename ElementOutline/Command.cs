@@ -114,32 +114,12 @@ namespace ElementOutline
       //  return Result.Failed;
       //}
 
-      // Do we have any pre-selected elements?
+      ICollection<ElementId> ids 
+        = Util.GetSelectedElements( uidoc );
 
-      Selection sel = uidoc.Selection;
-
-      ICollection<ElementId> ids = sel.GetElementIds();
-
-      // If no elements were pre-selected, 
-      // prompt for post-selection
-
-      if( null == ids || 0 == ids.Count )
+      if( (null == ids) || (0 == ids.Count) )
       {
-        IList<Reference> refs = null;
-
-        try
-        {
-          refs = sel.PickObjects( ObjectType.Element,
-            "Please select elements for 2D outline generation." );
-        }
-        catch( Autodesk.Revit.Exceptions
-          .OperationCanceledException )
-        {
-          return Result.Cancelled;
-        }
-        ids = new List<ElementId>(
-          refs.Select<Reference, ElementId>(
-            r => r.ElementId ) );
+        return Result.Cancelled;
       }
 
       // First attempt: create element 2D outline from

@@ -26,6 +26,14 @@ namespace ElementOutline
       UIDocument uidoc = uiapp.ActiveUIDocument;
       Application app = uiapp.Application;
       Document doc = uidoc.Document;
+
+      if( null == doc )
+      {
+        Util.ErrorMsg( "Please run this command in a valid"
+          + " Revit project document." );
+        return Result.Failed;
+      }
+
       Clipper c = new Clipper();
       List<List<IntPoint>> union = new List<List<IntPoint>>();
 
