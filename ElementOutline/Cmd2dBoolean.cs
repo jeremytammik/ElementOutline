@@ -9,6 +9,7 @@ using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using System.Linq;
 using System.IO;
+using ClipperLib;
 #endregion
 
 namespace ElementOutline
@@ -25,6 +26,12 @@ namespace ElementOutline
       UIDocument uidoc = uiapp.ActiveUIDocument;
       Application app = uiapp.Application;
       Document doc = uidoc.Document;
+      Clipper c = new Clipper();
+      List<List<IntPoint>> union = new List<List<IntPoint>>();
+
+      c.Execute( ClipType.ctUnion, union, 
+        PolyFillType.pftPositive, PolyFillType.pftPositive );
+
       return Result.Succeeded;
     }
   }
