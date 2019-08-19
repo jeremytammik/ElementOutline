@@ -47,6 +47,7 @@ using System.Runtime.InteropServices;
 // 2019-08-16 2020.0.0.5 added use of Tessellate in JtLineCollection constructor
 // 2019-08-16 2020.0.0.5 debugging GetOutlineRecusive
 // 2019-08-17 2020.0.0.6 started implementing support for multiple loops
+// 2019-08-18 2020.0.0.6 started implementing code using clipper for 2d union approach
 //
 [assembly: AssemblyVersion( "2020.0.0.6" )]
 [assembly: AssemblyFileVersion( "2020.0.0.6" )]

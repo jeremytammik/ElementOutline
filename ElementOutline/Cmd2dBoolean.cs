@@ -34,6 +34,14 @@ namespace ElementOutline
         return Result.Failed;
       }
 
+      ICollection<ElementId> ids
+        = Util.GetSelectedElements( uidoc );
+
+      if( (null == ids) || (0 == ids.Count) )
+      {
+        return Result.Cancelled;
+      }
+
       Clipper c = new Clipper();
       List<List<IntPoint>> union = new List<List<IntPoint>>();
 
