@@ -11,6 +11,16 @@ namespace ElementOutline
 {
   class Util
   {
+    /// <summary>
+    /// Output folder path; 
+    /// GetTempPath returns a weird GUID-named subdirectory 
+    /// created by Revit, so we will not use that, e.g.,
+    /// C:\Users\tammikj\AppData\Local\Temp\bfd59506-2dff-4b0f-bbe4-31587fcaf508
+    /// string path = Path.GetTempPath();
+    /// @"C:\Users\jta\AppData\Local\Temp"
+    /// </summary>
+    public const string OutputFolderPath = "C:/tmp";
+
     #region Geometrical Comparison
     const double _eps = 1.0e-9;
 

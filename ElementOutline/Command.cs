@@ -17,16 +17,6 @@ namespace ElementOutline
   public class Command : IExternalCommand
   {
     /// <summary>
-    /// Output folder path; 
-    /// GetTempPath returns a weird GUID-named subdirectory 
-    /// created by Revit, so we will not use that, e.g.,
-    /// C:\Users\tammikj\AppData\Local\Temp\bfd59506-2dff-4b0f-bbe4-31587fcaf508
-    /// string path = Path.GetTempPath();
-    /// @"C:\Users\jta\AppData\Local\Temp"
-    /// </summary>
-    string _output_folder_path = "C:/tmp";
-
-    /// <summary>
     /// Retrieve plan view boundary loops from element 
     /// solids using ExtrusionAnalyzer.
     /// </summary>
@@ -162,7 +152,7 @@ namespace ElementOutline
       Dictionary<int, JtLoops> solidLoops = GetSolidLoops(
         doc, ids );
 
-      string filepath = Path.Combine( _output_folder_path,
+      string filepath = Path.Combine( Util.OutputFolderPath,
         doc.Title + "_element_solid_outline.json" );
 
       ExportLoops( filepath, doc, solidLoops );
@@ -184,7 +174,7 @@ namespace ElementOutline
       EdgeLoopRetriever edgeLooper
         = new EdgeLoopRetriever( opt, ids );
 
-      filepath = Path.Combine( _output_folder_path,
+      filepath = Path.Combine( Util.OutputFolderPath,
          doc.Title + "_element_edge_outline.json" );
 
       ExportLoops( filepath, doc, edgeLooper.Loops );
