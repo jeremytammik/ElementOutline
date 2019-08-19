@@ -80,6 +80,12 @@
   <ItemGroup>
     <Content Include="ElementOutline.addin" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Y:\j\src\rvt\clipper_library\clipper_library.csproj">
+      <Project>{9b062971-a88e-4a3d-b3c9-12b78d15fa66}</Project>
+      <Name>clipper_library</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if exist "$(AppData)\Autodesk\REVIT\Addins\2020" copy "$(ProjectDir)*.addin" "$(AppData)\Autodesk\REVIT\Addins\2020"
