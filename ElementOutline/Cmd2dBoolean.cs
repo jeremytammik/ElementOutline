@@ -16,6 +16,7 @@ namespace ElementOutline
 {
   using Polygon = List<IntPoint>;
   using Polygons = List<List<IntPoint>>;
+  using LineSegment = Tuple<IntPoint, IntPoint>;
 
   [Transaction( TransactionMode.ReadOnly )]
   class Cmd2dBoolean : IExternalCommand
@@ -134,6 +135,7 @@ namespace ElementOutline
     /// </summary>
     public bool AddToUnion(
       Polygons union,
+      List<LineSegment> curves,
       VertexLookup vl,
       Clipper c,
       GeometryElement geoElem )
@@ -153,8 +155,13 @@ namespace ElementOutline
 
         // Skip objects that contribute no 2D surface
 
-        if( obj is Curve )
+        Curve curve = obj as Curve;
+        if( null != curve )
         {
+          curves.Add( new LineSegment(
+            vl.GetOrAdd( curve.GetEndPoint( 0 ) ),
+            vl.GetOrAdd( curve.GetEndPoint( 1 ) ) ) );
+
           continue;
         }
 
@@ -189,7 +196,7 @@ namespace ElementOutline
             = inst.GetInstanceGeometry(
               inst.Transform );
 
-          AddToUnion( union, vl, c, txGeoElem );
+          AddToUnion( union, curves, vl, c, txGeoElem );
           continue;
         }
         Debug.Assert( false,
@@ -258,6 +265,7 @@ namespace ElementOutline
 
       Clipper c = new Clipper();
       VertexLookup vl = new VertexLookup();
+      List<LineSegment> curves = new List<LineSegment>();
       Polygons union = new Polygons();
       Dictionary<int, JtLoops> booleanLoops
         = new Dictionary<int, JtLoops>( ids.Count );
@@ -271,7 +279,7 @@ namespace ElementOutline
         vl.Clear();
         union.Clear();
 
-        AddToUnion( union, vl, c, geo );
+        AddToUnion( union, curves, vl, c, geo );
 
         //c.AddPaths( subjects, PolyType.ptSubject, true );
         //c.AddPaths( clips, PolyType.ptClip, true );
@@ -279,9 +287,18 @@ namespace ElementOutline
         bool succeeded = c.Execute( ClipType.ctUnion, union,
           PolyFillType.pftPositive, PolyFillType.pftPositive );
 
-        loops = ConvertToLoops( union );
+        if( 0 == union.Count )
+        {
+          Debug.Print( string.Format(
+            "No outline found for {0} <{1}>",
+            e.Name, e.Id.IntegerValue ) );
+        }
+        else
+        {
+          loops = ConvertToLoops( union );
 
-        booleanLoops.Add( id.IntegerValue, loops );
+          booleanLoops.Add( id.IntegerValue, loops );
+        }
       }
 
       string filepath = Path.Combine( Util.OutputFolderPath,

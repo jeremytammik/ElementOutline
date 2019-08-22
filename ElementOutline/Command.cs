@@ -120,21 +120,25 @@ namespace ElementOutline
       // counter-clockwise keeping to the right-most
       // edge until a closed loop is achieved.
 
-      View view = doc.ActiveView;
+      bool second_attempt = false;
 
-      Options opt = new Options
+      if( second_attempt )
       {
-        View = view
-      };
+        View view = doc.ActiveView;
 
-      EdgeLoopRetriever edgeLooper
-        = new EdgeLoopRetriever( opt, ids );
+        Options opt = new Options
+        {
+          View = view
+        };
 
-      filepath = Path.Combine( Util.OutputFolderPath,
-         doc.Title + "_element_edge_outline.json" );
+        EdgeLoopRetriever edgeLooper
+          = new EdgeLoopRetriever( opt, ids );
 
-      Util.ExportLoops( filepath, doc, edgeLooper.Loops );
+        filepath = Path.Combine( Util.OutputFolderPath,
+           doc.Title + "_element_edge_outline.json" );
 
+        Util.ExportLoops( filepath, doc, edgeLooper.Loops );
+      }
       return Result.Succeeded;
     }
   }
