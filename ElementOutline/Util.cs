@@ -104,6 +104,11 @@ namespace ElementOutline
     {
       return IsZero( b - a );
     }
+
+    public static bool IsHorizontal( XYZ v )
+    {
+      return IsZero( v.Z );
+    }
     #endregion // Geometrical comparison
 
     #region Unit conversion

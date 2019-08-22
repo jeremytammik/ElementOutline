@@ -2,15 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using Autodesk.Revit.UI.Selection;
-using System.Linq;
-using System.IO;
-using ClipperLib;
 using Autodesk.Revit.DB.IFC;
+using Autodesk.Revit.UI;
+using ClipperLib;
 #endregion
 
 namespace ElementOutline
@@ -39,8 +38,8 @@ namespace ElementOutline
     }
 
     /// <summary>
-    /// Return the union of all outlines projected onto
-    /// the XY plane from the geometry solids and meshes
+    /// Add the 2D projection of the given mesh triangles
+    /// to the current element outline union
     /// </summary>
     static public bool AddToUnion(
       Polygons union,
@@ -63,9 +62,66 @@ namespace ElementOutline
         triangle.Add( vl.GetOrAdd( mt.get_Vertex( 2 ) ) );
         triangles.Add( triangle );
       }
-      c.AddPaths( triangles, PolyType.ptSubject, true );
+      return c.AddPaths( triangles, PolyType.ptSubject, true );
+    }
 
-      return true;
+    /// <summary>
+    /// Add the 2D projection of the given face 
+    /// to the current element outline union
+    /// </summary>
+    static public bool AddToUnion(
+      Polygons union,
+      VertexLookup vl,
+      Clipper c,
+      Face f )
+    {
+      IList<CurveLoop> loops = f.GetEdgesAsCurveLoops();
+
+      Polygons faces = new Polygons( loops.Count );
+
+      // ExporterIFCUtils class can also be used for 
+      // non-IFC purposes. The SortCurveLoops method 
+      // sorts curve loops (edge loops) so that the 
+      // outer loops come first.
+
+      IList<IList<CurveLoop>> sortedLoops
+        = ExporterIFCUtils.SortCurveLoops( loops );
+
+      foreach( IList<CurveLoop> loops2
+        in sortedLoops )
+      {
+        foreach( CurveLoop loop in loops2 )
+        {
+          // Outer curve loops are counter-clockwise
+
+          if( loop.IsCounterclockwise( XYZ.BasisZ ) )
+          {
+            foreach( Curve curve in loop )
+            {
+              IList<XYZ> pts = curve.Tessellate();
+
+              IntPoint a = vl.GetOrAdd( pts[ 0 ] );
+
+              int n = pts.Count;
+              Polygon face2d = new Polygon( n );
+              face2d.Add( a );
+
+              for( int i = 1; i < n; ++i )
+              {
+                IntPoint b = vl.GetOrAdd( pts[ i ] );
+
+                if( b != a )
+                {
+                  face2d.Add( b );
+                  a = b;
+                }
+                faces.Add( face2d );
+              }
+            }
+          }
+        }
+      }
+      return c.AddPaths( faces, PolyType.ptSubject, true );
     }
 
     /// <summary>
@@ -97,10 +153,11 @@ namespace ElementOutline
         // Profile
         // Solid
 
-        Mesh mesh = obj as Mesh;
-        if( null != mesh )
+        // Skip objects that contribute no 2D surface
+
+        if( obj is Curve )
         {
-          AddToUnion( union, vl, c, mesh );
+          continue;
         }
 
         Solid solid = obj as Solid;
@@ -108,34 +165,25 @@ namespace ElementOutline
         {
           foreach( Face f in solid.Faces )
           {
-            IList<CurveLoop> loops = f.GetEdgesAsCurveLoops();
+            // Skip pretty common case: vertical planar face
 
-            // ExporterIFCUtils class can also be used for 
-            // non-IFC purposes. The SortCurveLoops method 
-            // sorts curve loops (edge loops) so that the 
-            // outer loops come first.
-
-            IList<IList<CurveLoop>> sortedLoops
-              = ExporterIFCUtils.SortCurveLoops( loops );
-
-            foreach( IList<CurveLoop> loops2
-              in sortedLoops )
+            if( f is PlanarFace
+              && Util.IsHorizontal( ((PlanarFace) f).FaceNormal ) )
             {
-              foreach( CurveLoop loop in loops2 )
-              {
-                // Outer curve loops are counter-clockwise
-
-                if( loop.IsCounterclockwise( XYZ.BasisZ ) )
-                {
-                  foreach( Curve curve in loop )
-                  {
-                  }
-                }
-              }
+              continue;
             }
+            AddToUnion( union, vl, c, f );
           }
           continue;
         }
+
+        Mesh mesh = obj as Mesh;
+        if( null != mesh )
+        {
+          AddToUnion( union, vl, c, mesh );
+          continue;
+        }
+
         GeometryInstance inst = obj as GeometryInstance;
         if( null != inst )
         {
@@ -147,7 +195,7 @@ namespace ElementOutline
           continue;
         }
         Debug.Assert( false,
-          "expected curve, solid or instance" );
+          "expected only solid, mesh or instance" );
       }
       return true;
     }
@@ -170,7 +218,6 @@ namespace ElementOutline
       }
       return loops;
     }
-
 
     public Result Execute(
       ExternalCommandData commandData,

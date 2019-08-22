@@ -50,6 +50,7 @@ using System.Runtime.InteropServices;
 // 2019-08-18 2020.0.0.6 started implementing code using clipper for 2d union approach
 // 2019-08-19 2020.0.0.6 implementing code using clipper for 2d union approach
 // 2019-08-20 2020.0.0.6 implementing code using clipper for 2d union approach
+// 2019-08-22 2020.0.0.7 completed first draft of 2d boolean union approach
 //
-[assembly: AssemblyVersion( "2020.0.0.6" )]
-[assembly: AssemblyFileVersion( "2020.0.0.6" )]
+[assembly: AssemblyVersion( "2020.0.0.7" )]
+[assembly: AssemblyFileVersion( "2020.0.0.7" )]
