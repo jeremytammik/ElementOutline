@@ -23,6 +23,10 @@ namespace ElementOutline
     /// <summary>
     /// Map Point2dInt coordinates to 
     /// Clipper IntPoint instances. 
+    /// The purpose of this is that depending on the 
+    /// precision used by the comparison operator,
+    /// different Point2dInt input keys may actually
+    /// map to the same IntPoint value.
     /// </summary>
     public class VertexLookup : Dictionary<Point2dInt, IntPoint>
     {
@@ -134,12 +138,6 @@ namespace ElementOutline
       Clipper c,
       GeometryElement geoElem )
     {
-      //c.AddPaths( subjects, PolyType.ptSubject, true );
-      //c.AddPaths( clips, PolyType.ptClip, true );
-      //solution.Clear();
-      bool succeeded = c.Execute( ClipType.ctUnion, union,
-        PolyFillType.pftPositive, PolyFillType.pftPositive );
-
       foreach( GeometryObject obj in geoElem )
       {
         // Curve
@@ -274,6 +272,12 @@ namespace ElementOutline
         union.Clear();
 
         AddToUnion( union, vl, c, geo );
+
+        //c.AddPaths( subjects, PolyType.ptSubject, true );
+        //c.AddPaths( clips, PolyType.ptClip, true );
+
+        bool succeeded = c.Execute( ClipType.ctUnion, union,
+          PolyFillType.pftPositive, PolyFillType.pftPositive );
 
         loops = ConvertToLoops( union );
 
