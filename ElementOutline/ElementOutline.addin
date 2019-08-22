@@ -1,14 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RevitAddIns>
   <AddIn Type="Command">
-    <Text>Command ElementOutline</Text>
-    <Description>Some description for ElementOutline</Description>
+    <Text>Element Outline Solid</Text>
+    <Description>Determine element outline from geometry solids and ExtrusionAnalyzer</Description>
     <Assembly>ElementOutline.dll</Assembly>
     <FullClassName>ElementOutline.Command</FullClassName>
     <ClientId>cc311594-d26d-4f64-9dc7-71c43d27fbf6</ClientId>
     <VendorId>com.typepad.thebuildingcoder</VendorId>
     <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
   </AddIn>
+  <AddIn Type="Command">
+    <Text>Element Outline 2D Boolean</Text>
+    <Description>Determine element outline from 2D Booleans of projected solid faces and meshes</Description>
+    <Assembly>ElementOutline.dll</Assembly>
+    <FullClassName>ElementOutline.Cmd2dBoolean</FullClassName>
+    <ClientId>2d2bca85-05f1-49ce-a309-ddd2fa14c795</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+  <!--
   <AddIn Type="Application">
     <Name>Application ElementOutline</Name>
     <Assembly>ElementOutline.dll</Assembly>
@@ -17,4 +27,5 @@
     <VendorId>com.typepad.thebuildingcoder</VendorId>
     <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
   </AddIn>
+  -->
 </RevitAddIns>
