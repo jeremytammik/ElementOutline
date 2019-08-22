@@ -30,7 +30,7 @@ namespace ElementOutline
       public IntPoint GetOrAdd( XYZ p )
       {
         Point2dInt q = new Point2dInt( p );
-        if(!ContainsKey(q))
+        if( !ContainsKey( q ) )
         {
           Add( q, new IntPoint { X = q.X, Y = q.Y } );
         }
@@ -106,7 +106,7 @@ namespace ElementOutline
         Solid solid = obj as Solid;
         if( null != solid )
         {
-          foreach(Face f in solid.Faces)
+          foreach( Face f in solid.Faces )
           {
             IList<CurveLoop> loops = f.GetEdgesAsCurveLoops();
 
@@ -159,10 +159,10 @@ namespace ElementOutline
     {
       JtLoops loops = new JtLoops( union.Count );
       JtLoop loop = new JtLoop( union.First<Polygon>().Count );
-      foreach(Polygon poly in union )
+      foreach( Polygon poly in union )
       {
         loop.Clear();
-        foreach(IntPoint p in poly)
+        foreach( IntPoint p in poly )
         {
           loop.Add( new Point2dInt( p.X, p.Y ) );
         }
