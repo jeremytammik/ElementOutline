@@ -82,8 +82,6 @@ namespace ElementOutline
     {
       IList<CurveLoop> loops = f.GetEdgesAsCurveLoops();
 
-      Polygons faces = new Polygons( loops.Count );
-
       // ExporterIFCUtils class can also be used for 
       // non-IFC purposes. The SortCurveLoops method 
       // sorts curve loops (edge loops) so that the 
@@ -91,6 +89,9 @@ namespace ElementOutline
 
       IList<IList<CurveLoop>> sortedLoops
         = ExporterIFCUtils.SortCurveLoops( loops );
+
+      Polygons faces = new Polygons( loops.Count );
+      Polygon face2d = new Polygon( sortedLoops[0].Count );
 
       foreach( IList<CurveLoop> loops2
         in sortedLoops )
@@ -101,6 +102,8 @@ namespace ElementOutline
 
           if( loop.IsCounterclockwise( XYZ.BasisZ ) )
           {
+            face2d.Clear();
+
             foreach( Curve curve in loop )
             {
               IList<XYZ> pts = curve.Tessellate();
@@ -108,7 +111,6 @@ namespace ElementOutline
               IntPoint a = vl.GetOrAdd( pts[ 0 ] );
 
               int n = pts.Count;
-              Polygon face2d = new Polygon( n );
               face2d.Add( a );
 
               for( int i = 1; i < n; ++i )
@@ -120,9 +122,9 @@ namespace ElementOutline
                   face2d.Add( b );
                   a = b;
                 }
-                faces.Add( face2d );
               }
             }
+            faces.Add( face2d );
           }
         }
       }
