@@ -206,6 +206,35 @@ namespace ElementOutline
     }
 
     /// <summary>
+    /// Return the outer polygons defined 
+    /// by the given line segments
+    /// </summary>
+    /// <param name="curves"></param>
+    /// <returns></returns>
+    Polygons CreatePolygons( List<LineSegment> curves )
+    {
+      Polygons polys = new Polygons();
+      IntPoint p1 = curves.Select<LineSegment, IntPoint>( s => s.Item1 ).Min<IntPoint>();
+      IntPoint p2 = curves.Select<LineSegment, IntPoint>( s => s.Item2 ).Min<IntPoint>();
+      //IntPoint p = Min( p1, p2 );
+      return polys;
+    }
+
+    /// <summary>
+    /// Convert the curves to a polygon 
+    /// and add it to the union
+    /// </summary>
+    public bool AddToUnion(
+      Polygons union,
+      VertexLookup vl,
+      Clipper c,
+      List<LineSegment> curves )
+    {
+      Polygons polys = CreatePolygons( curves );
+      return c.AddPaths( polys, PolyType.ptSubject, true );
+    }
+
+    /// <summary>
     /// Convert Clipper polygons to JtLoops
     /// </summary>
     JtLoops ConvertToLoops( Polygons union )
@@ -280,6 +309,8 @@ namespace ElementOutline
         union.Clear();
 
         AddToUnion( union, curves, vl, c, geo );
+
+        //AddToUnion( union, vl, c, curves );
 
         //c.AddPaths( subjects, PolyType.ptSubject, true );
         //c.AddPaths( clips, PolyType.ptClip, true );
