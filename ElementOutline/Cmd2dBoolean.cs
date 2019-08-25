@@ -90,42 +90,47 @@ namespace ElementOutline
       IList<IList<CurveLoop>> sortedLoops
         = ExporterIFCUtils.SortCurveLoops( loops );
 
-      Polygons faces = new Polygons( loops.Count );
-      Polygon face2d = new Polygon( sortedLoops[0].Count );
+      int n = loops.Count;
 
-      foreach( IList<CurveLoop> loops2
-        in sortedLoops )
+      Debug.Assert( 0 < n,
+        "expected at least one face loop" );
+
+      Polygons faces = new Polygons( n );
+      Polygon face2d = new Polygon( loops[ 0 ].NumberOfCurves() );
+
+      //foreach( IList<CurveLoop> loops2
+      //  in sortedLoops )
+
+      foreach( CurveLoop loop in loops )
       {
-        foreach( CurveLoop loop in loops2 )
+        // Outer curve loops are counter-clockwise
+
+        if( loop.IsCounterclockwise( XYZ.BasisZ ) )
         {
-          // Outer curve loops are counter-clockwise
+          face2d.Clear();
 
-          if( loop.IsCounterclockwise( XYZ.BasisZ ) )
+          foreach( Curve curve in loop )
           {
-            face2d.Clear();
+            IList<XYZ> pts = curve.Tessellate();
 
-            foreach( Curve curve in loop )
+            IntPoint a = vl.GetOrAdd( pts[ 0 ] );
+
+            face2d.Add( a );
+
+            n = pts.Count;
+
+            for( int i = 1; i < n; ++i )
             {
-              IList<XYZ> pts = curve.Tessellate();
+              IntPoint b = vl.GetOrAdd( pts[ i ] );
 
-              IntPoint a = vl.GetOrAdd( pts[ 0 ] );
-
-              int n = pts.Count;
-              face2d.Add( a );
-
-              for( int i = 1; i < n; ++i )
+              if( b != a )
               {
-                IntPoint b = vl.GetOrAdd( pts[ i ] );
-
-                if( b != a )
-                {
-                  face2d.Add( b );
-                  a = b;
-                }
+                face2d.Add( b );
+                a = b;
               }
             }
-            faces.Add( face2d );
           }
+          faces.Add( face2d );
         }
       }
       return c.AddPaths( faces, PolyType.ptSubject, true );

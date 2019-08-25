@@ -52,6 +52,8 @@ using System.Runtime.InteropServices;
 // 2019-08-20 2020.0.0.6 implementing code using clipper for 2d union approach
 // 2019-08-22 2020.0.0.7 completed first draft of 2d boolean union approach
 // 2019-08-22 2020.0.0.8 added curve support to 2d boolean union approach
+// 2019-08-23 2020.0.0.8 removed curve support to 2d boolean union approach
+// 2019-08-24 2020.0.0.9 removed call to ExporterIFCUtils.SortCurveLoops on solid face loops
 //
-[assembly: AssemblyVersion( "2020.0.0.8" )]
-[assembly: AssemblyFileVersion( "2020.0.0.8" )]
+[ assembly: AssemblyVersion( "2020.0.0.9" )]
+[assembly: AssemblyFileVersion( "2020.0.0.9" )]
