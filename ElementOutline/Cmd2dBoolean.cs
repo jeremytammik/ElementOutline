@@ -200,8 +200,8 @@ namespace ElementOutline
         if( null != inst )
         {
           GeometryElement txGeoElem
-            = inst.GetInstanceGeometry(
-              inst.Transform );
+            = inst.GetInstanceGeometry( 
+              Transform.Identity ); // inst.Transform
 
           AddToUnion( union, curves, vl, c, txGeoElem );
           continue;
