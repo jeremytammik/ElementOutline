@@ -253,7 +253,8 @@ namespace ElementOutline
         loop.Clear();
         foreach( IntPoint p in poly )
         {
-          loop.Add( new Point2dInt( p.X, p.Y ) );
+          loop.Add( new Point2dInt( 
+            (int) p.X, (int) p.Y ) );
         }
         loops.Add( loop );
       }
