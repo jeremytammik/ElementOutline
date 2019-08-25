@@ -298,8 +298,6 @@ namespace ElementOutline
         View = view
       };
 
-      JtLoops loops = new JtLoops( 1 );
-
       Clipper c = new Clipper();
       VertexLookup vl = new VertexLookup();
       List<LineSegment> curves = new List<LineSegment>();
@@ -334,7 +332,7 @@ namespace ElementOutline
         }
         else
         {
-          loops = ConvertToLoops( union );
+          JtLoops loops = ConvertToLoops( union );
 
           booleanLoops.Add( id.IntegerValue, loops );
         }

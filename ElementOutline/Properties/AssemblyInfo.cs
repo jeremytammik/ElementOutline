@@ -54,6 +54,8 @@ using System.Runtime.InteropServices;
 // 2019-08-22 2020.0.0.8 added curve support to 2d boolean union approach
 // 2019-08-23 2020.0.0.8 removed curve support to 2d boolean union approach
 // 2019-08-24 2020.0.0.9 removed call to ExporterIFCUtils.SortCurveLoops on solid face loops
+// 2019-08-25 2020.0.0.10 cast clipper PointInt coords from Int64 to int before constructing Point2dInt -- 2d Boolean loops work n ow
+// 2019-08-25 2020.0.0.10 implermented Point2dInt.Normalize
 //
-[ assembly: AssemblyVersion( "2020.0.0.9" )]
-[assembly: AssemblyFileVersion( "2020.0.0.9" )]
+[assembly: AssemblyVersion( "2020.0.0.10" )]
+[assembly: AssemblyFileVersion( "2020.0.0.10" )]

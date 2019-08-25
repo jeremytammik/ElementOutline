@@ -63,6 +63,22 @@ namespace ElementOutline
     }
 
     /// <summary>
+    /// Normalize the loop by ensuriung that the 
+    /// minimal vertex comes first 
+    /// </summary>
+    public void Normalize()
+    {
+      Point2dInt pmin = this.Min<Point2dInt>();
+      int i = IndexOf( pmin );
+      int n = Count;
+      Point2dInt[] a = new Point2dInt[ n ];
+      CopyTo( a, i );
+      CopyTo( 0, a, i, n - i );
+      Clear();
+      AddRange( a );
+    }
+
+    /// <summary>
     /// Return a bounding box 
     /// containing this loop.
     /// </summary>
