@@ -63,8 +63,8 @@ namespace ElementOutline
     }
 
     /// <summary>
-    /// Normalize the loop by ensuriung that the 
-    /// minimal vertex comes first 
+    /// Normalize the loop by ensuring that
+    /// the minimal vertex comes first 
     /// </summary>
     public void Normalize()
     {

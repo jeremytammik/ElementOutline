@@ -334,6 +334,8 @@ namespace ElementOutline
         {
           JtLoops loops = ConvertToLoops( union );
 
+          loops.NormalizeLoops();
+
           booleanLoops.Add( id.IntegerValue, loops );
         }
       }

@@ -56,6 +56,8 @@ namespace ElementOutline
         }
         CmdUploadRooms.ListLoops( e, loops );
 
+        loops.NormalizeLoops();
+
         solidLoops.Add( id.IntegerValue, loops );
       }
       return solidLoops;

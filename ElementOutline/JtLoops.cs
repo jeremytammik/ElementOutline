@@ -22,7 +22,7 @@ namespace ElementOutline
     /// Unite two collections of boundary 
     /// loops into one single one.
     /// </summary>
-    public static JtLoops operator+( JtLoops a, JtLoops b )
+    public static JtLoops operator +( JtLoops a, JtLoops b )
     {
       int na = a.Count;
       int nb = b.Count;
@@ -30,6 +30,18 @@ namespace ElementOutline
       sum.AddRange( a );
       sum.AddRange( b );
       return sum;
+    }
+
+    /// <summary>
+    /// Normalize the loops by ensuring that
+    /// their minimal vertex comes first 
+    /// </summary>
+    public void NormalizeLoops()
+    {
+      foreach( JtLoop loop in this )
+      {
+        loop.Normalize();
+      }
     }
 
     /// <summary>
@@ -62,9 +74,9 @@ namespace ElementOutline
     /// </summary>
     public List<Point[]> GetGraphicsPathLines()
     {
-      List<Point[]> loops 
+      List<Point[]> loops
         = new List<Point[]>( Count );
-      
+
       foreach( JtLoop jloop in this )
       {
         loops.Add( jloop.GetGraphicsPathLines() );
