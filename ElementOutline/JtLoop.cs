@@ -72,8 +72,8 @@ namespace ElementOutline
       int i = IndexOf( pmin );
       int n = Count;
       Point2dInt[] a = new Point2dInt[ n ];
-      CopyTo( a, i );
-      CopyTo( 0, a, i, n - i );
+      CopyTo( i, a, 0, n - i );
+      CopyTo( 0, a, n - i, i );
       Clear();
       AddRange( a );
     }
