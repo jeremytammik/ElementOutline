@@ -58,6 +58,8 @@ using System.Runtime.InteropServices;
 // 2019-08-25 2020.0.0.10 implemented JtLoop.Normalize -- loops are ok but family instance is offset
 // 2019-08-25 2020.0.0.10 get instance geometry with identity transform -- solid and 2d boolean loops are identical
 // 2019-09-03 2020.0.0.11 added support for full circle, i.e., closed Arc -- successful test on intercom element
+// 2019-09-03 2020.0.0.12 deleted unused JtLine class
+// 2019-09-03 2020.0.0.12 implemented GeoSnoop.DisplayLoops
 //
-[assembly: AssemblyVersion( "2020.0.0.11" )]
-[assembly: AssemblyFileVersion( "2020.0.0.11" )]
+[assembly: AssemblyVersion( "2020.0.0.12" )]
+[assembly: AssemblyFileVersion( "2020.0.0.12" )]

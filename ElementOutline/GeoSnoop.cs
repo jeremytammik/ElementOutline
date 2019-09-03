@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Windows.Forms;
 using ElementId = Autodesk.Revit.DB.ElementId;
 #endregion
@@ -92,10 +93,10 @@ namespace ElementOutline
     }
     #endregion // DrawLoopsOnGraphics
 
-    #region DisplayRoom
+    #region DisplayRoom and DisplayLoops
     /// <summary>
-    /// Display room and furniture in a temporary form
-    /// generated on the fly.
+    /// Display room and the furniture in contains in 
+    /// a bitmap generated on the fly.
     /// </summary>
     /// <param name="roomLoops">Room boundary loops</param>
     /// <param name="geometryLoops">Family symbol geometry</param>
@@ -188,8 +189,60 @@ namespace ElementOutline
       }
       return bmp;
     }
-    #endregion // DisplayRoom
 
+    /// <summary>
+    /// Display a collection of loops in 
+    /// a bitmap generated on the fly.
+    /// </summary>
+    public static Bitmap DisplayLoops(
+      ICollection<JtLoops> loops )
+    {
+      JtBoundingBox2dInt bbFrom = new JtBoundingBox2dInt();
+      foreach( JtLoops a in loops )
+      {
+        bbFrom.ExpandToContain( a.BoundingBox );
+      }
+
+      // Adjust target rectangle height to the 
+      // displayee loop height.
+
+      int width = _form_width;
+      int height = (int) (width * bbFrom.AspectRatio + 0.5);
+
+      // the bounding box fills the rectangle 
+      // perfectly and completely, inverted and
+      // non-uniformly distorted:
+
+      // Specify transformation target rectangle 
+      // including a margin.
+
+      int bottom = height - (_margin + _margin);
+
+      Point[] parallelogramPoints = new Point[] {
+        new Point( _margin, bottom ), // upper left
+        new Point( width - _margin, bottom ), // upper right
+        new Point( _margin, _margin ) // lower left
+      };
+
+      // Transform from native loop coordinate system
+      // to target display coordinates.
+
+      Matrix transform = new Matrix(
+        bbFrom.Rectangle, parallelogramPoints );
+
+      Bitmap bmp = new Bitmap( width, height );
+      Graphics graphics = Graphics.FromImage( bmp );
+
+      graphics.Clear( System.Drawing.Color.White );
+
+      foreach( JtLoops a in loops )
+      {
+        DrawLoopsOnGraphics( graphics,
+          a.GetGraphicsPathLines(), transform );
+      }
+      return bmp;
+    }
+    #endregion // DisplayRoom
 
     #region DisplayImageInForm
     /// <summary>

@@ -73,7 +73,8 @@ namespace ElementOutline
       Application app = uiapp.Application;
       Document doc = uidoc.Document;
 
-      IntPtr hwnd = uiapp.MainWindowHandle;
+      JtWindowHandle hwnd = new JtWindowHandle( 
+        uiapp.MainWindowHandle );
 
       if( null == doc )
       {
@@ -113,7 +114,7 @@ namespace ElementOutline
       string filepath = Path.Combine( Util.OutputFolderPath,
         doc.Title + "_element_solid_outline.json" );
 
-      Util.ExportLoops( filepath, doc, solidLoops );
+      Util.ExportLoops( filepath, hwnd, doc, solidLoops );
 
       // Second attempt: create element 2D outline from
       // element geometry edges in current view by 
@@ -139,7 +140,7 @@ namespace ElementOutline
         filepath = Path.Combine( Util.OutputFolderPath,
            doc.Title + "_element_edge_outline.json" );
 
-        Util.ExportLoops( filepath, doc, edgeLooper.Loops );
+        Util.ExportLoops( filepath, hwnd, doc, edgeLooper.Loops );
       }
       return Result.Succeeded;
     }

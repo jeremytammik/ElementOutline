@@ -386,7 +386,9 @@ namespace ElementOutline
       string filepath = Path.Combine( Util.OutputFolderPath,
          doc.Title + "_element_2d_boolean_outline.json" );
 
-      Util.ExportLoops( filepath, doc, booleanLoops );
+      JtWindowHandle hwnd = new JtWindowHandle( uiapp.MainWindowHandle );
+
+      Util.ExportLoops( filepath, hwnd, doc, booleanLoops );
 
       return Result.Succeeded;
     }

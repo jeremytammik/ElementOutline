@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -27,9 +28,15 @@ namespace ElementOutline
 
     public static void ExportLoops(
       string filepath,
+      IWin32Window owner_window,
       Document doc,
       Dictionary<int, JtLoops> loops )
     {
+      Bitmap bmp = GeoSnoop.DisplayLoops( loops.Values );
+
+      GeoSnoop.DisplayImageInForm( owner_window,
+        App.Caption, false, bmp );
+
       using( StreamWriter s = new StreamWriter( filepath ) )
       {
         List<int> keys = new List<int>( loops.Keys );
