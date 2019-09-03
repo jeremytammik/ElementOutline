@@ -95,8 +95,8 @@ namespace ElementOutline
 
     #region DisplayRoom and DisplayLoops
     /// <summary>
-    /// Display room and the furniture in contains in 
-    /// a bitmap generated on the fly.
+    /// Display room and the furniture contained in it
+    /// in a bitmap generated on the fly.
     /// </summary>
     /// <param name="roomLoops">Room boundary loops</param>
     /// <param name="geometryLoops">Family symbol geometry</param>
