@@ -137,10 +137,45 @@ namespace ElementOutline
     }
 
     /// <summary>
+    /// Add the 2D projection of the given arc 
+    /// to the current element outline union
+    /// </summary>
+    static public bool AddToUnion(
+      Polygons union,
+      VertexLookup vl,
+      Clipper c,
+      Arc arc )
+    {
+      IList<XYZ> pts = arc.Tessellate();
+      int n = pts.Count;
+
+      Polygons faces = new Polygons( 1 );
+      Polygon face2d = new Polygon( n );
+
+      IntPoint a = vl.GetOrAdd( pts[ 0 ] );
+
+      face2d.Add( a );
+
+      for( int i = 1; i < n; ++i )
+      {
+        IntPoint b = vl.GetOrAdd( pts[ i ] );
+
+        if( b != a )
+        {
+          face2d.Add( b );
+          a = b;
+        }
+      }
+      faces.Add( face2d );
+
+      return c.AddPaths( faces, PolyType.ptSubject, true );
+    }
+
+    /// <summary>
     /// Return the union of all outlines projected onto
     /// the XY plane from the geometry solids and meshes
     /// </summary>
-    public bool AddToUnion(
+    static public bool AddToUnion(
       Polygons union,
       List<LineSegment> curves,
       VertexLookup vl,
@@ -165,10 +200,18 @@ namespace ElementOutline
         Curve curve = obj as Curve;
         if( null != curve )
         {
-          curves.Add( new LineSegment(
-            vl.GetOrAdd( curve.GetEndPoint( 0 ) ),
-            vl.GetOrAdd( curve.GetEndPoint( 1 ) ) ) );
+          Arc arc = curve as Arc;
 
+          if( null != arc && arc.IsCyclic )
+          {
+            AddToUnion( union, vl, c, arc );
+          }
+          else if( curve.IsBound )
+          {
+            curves.Add( new LineSegment(
+              vl.GetOrAdd( curve.GetEndPoint( 0 ) ),
+              vl.GetOrAdd( curve.GetEndPoint( 1 ) ) ) );
+          }
           continue;
         }
 

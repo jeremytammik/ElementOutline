@@ -56,7 +56,8 @@ using System.Runtime.InteropServices;
 // 2019-08-24 2020.0.0.9 removed call to ExporterIFCUtils.SortCurveLoops on solid face loops
 // 2019-08-25 2020.0.0.10 cast clipper PointInt coords from Int64 to int before constructing Point2dInt -- 2d Boolean loops work n ow
 // 2019-08-25 2020.0.0.10 implemented JtLoop.Normalize -- loops are ok but family instance is offset
-// 2019-08-25 2020.0.0.10 get instance geometry with identity transform
+// 2019-08-25 2020.0.0.10 get instance geometry with identity transform -- solid and 2d boolean loops are identical
+// 2019-09-03 2020.0.0.11 added support for full circle, i.e., closed Arc -- successful test on intercom element
 //
-[assembly: AssemblyVersion( "2020.0.0.10" )]
-[assembly: AssemblyFileVersion( "2020.0.0.10" )]
+[assembly: AssemblyVersion( "2020.0.0.11" )]
+[assembly: AssemblyFileVersion( "2020.0.0.11" )]
