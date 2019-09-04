@@ -388,7 +388,10 @@ namespace ElementOutline
 
       JtWindowHandle hwnd = new JtWindowHandle( uiapp.MainWindowHandle );
 
-      Util.ExportLoops( filepath, hwnd, doc, booleanLoops );
+      string caption = doc.Title + " 2D Booleans";
+
+      Util.ExportLoops( filepath, hwnd, caption,
+        doc, booleanLoops );
 
       return Result.Succeeded;
     }

@@ -114,7 +114,9 @@ namespace ElementOutline
       string filepath = Path.Combine( Util.OutputFolderPath,
         doc.Title + "_element_solid_outline.json" );
 
-      Util.ExportLoops( filepath, hwnd, doc, solidLoops );
+      string caption = doc.Title + " solid extrusions";
+
+      Util.ExportLoops( filepath, hwnd, caption, doc, solidLoops );
 
       // Second attempt: create element 2D outline from
       // element geometry edges in current view by 
@@ -140,7 +142,10 @@ namespace ElementOutline
         filepath = Path.Combine( Util.OutputFolderPath,
            doc.Title + "_element_edge_outline.json" );
 
-        Util.ExportLoops( filepath, hwnd, doc, edgeLooper.Loops );
+        caption = doc.Title + " curve outlines";
+
+        Util.ExportLoops( filepath, hwnd, caption, 
+          doc, edgeLooper.Loops );
       }
       return Result.Succeeded;
     }

@@ -29,16 +29,19 @@ namespace ElementOutline
     public static void ExportLoops(
       string filepath,
       IWin32Window owner_window,
+      string caption,
       Document doc,
       Dictionary<int, JtLoops> loops )
     {
       Bitmap bmp = GeoSnoop.DisplayLoops( loops.Values );
 
       GeoSnoop.DisplayImageInForm( owner_window,
-        App.Caption, false, bmp );
+        caption, false, bmp );
 
       using( StreamWriter s = new StreamWriter( filepath ) )
       {
+        s.WriteLine( caption );
+
         List<int> keys = new List<int>( loops.Keys );
         keys.Sort();
         foreach( int key in keys )

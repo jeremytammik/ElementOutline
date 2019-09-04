@@ -61,6 +61,7 @@ using System.Runtime.InteropServices;
 // 2019-09-03 2020.0.0.12 deleted unused JtLine class
 // 2019-09-03 2020.0.0.12 implemented GeoSnoop.DisplayLoops
 // 2019-09-04 2020.0.0.13 reduce GeoSnoop.DisplayLoops target rectangle so edge lines remain visible
+// 2019-09-04 2020.0.0.13 added caption
 //
 [assembly: AssemblyVersion( "2020.0.0.13" )]
 [assembly: AssemblyFileVersion( "2020.0.0.13" )]

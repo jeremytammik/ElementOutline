@@ -216,8 +216,8 @@ namespace ElementOutline
       // Reduce target rectangle slightly so line 
       // segments along the outer edge are visible.
 
-      width -= 4;
-      height -= 4;
+      width -= 6;
+      height -= 6;
 
       // Specify transformation target rectangle 
       // including a margin.
