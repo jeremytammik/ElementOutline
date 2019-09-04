@@ -211,7 +211,13 @@ namespace ElementOutline
 
       // the bounding box fills the rectangle 
       // perfectly and completely, inverted and
-      // non-uniformly distorted:
+      // non-uniformly distorted.
+
+      // Reduce target rectangle slightly so line 
+      // segments along the outer edge are visible.
+
+      width -= 4;
+      height -= 4;
 
       // Specify transformation target rectangle 
       // including a margin.
