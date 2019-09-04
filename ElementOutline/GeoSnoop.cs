@@ -23,7 +23,7 @@ namespace ElementOutline
     /// <summary>
     /// Width of the form to generate.
     /// </summary>
-    const int _form_width = 400;
+    const int _form_width = 800;
 
     /// <summary>
     /// Pen size.
@@ -39,13 +39,13 @@ namespace ElementOutline
     /// Margin around graphics between 
     /// sheet and form edge.
     /// </summary>
-    const int _margin = 10;
+    const int _margin = 20;
 
     /// <summary>
     /// Margin around graphics between 
     /// BIM elements and viewport edge.
     /// </summary>
-    const int _margin2 = 10;
+    const int _margin2 = 20;
     #endregion // Constants
 
     #region Pen
@@ -202,6 +202,7 @@ namespace ElementOutline
       {
         bbFrom.ExpandToContain( a.BoundingBox );
       }
+      //bbFrom.AdjustBy();
 
       // Adjust target rectangle height to the 
       // displayee loop height.
@@ -215,9 +216,8 @@ namespace ElementOutline
 
       // Reduce target rectangle slightly so line 
       // segments along the outer edge are visible.
-
-      width -= 6;
-      height -= 6;
+      //width -= 6;
+      //height -= 6;
 
       // Specify transformation target rectangle 
       // including a margin.
@@ -236,7 +236,10 @@ namespace ElementOutline
       Matrix transform = new Matrix(
         bbFrom.Rectangle, parallelogramPoints );
 
+      //int edge_width = 4;
+
       Bitmap bmp = new Bitmap( width, height );
+
       Graphics graphics = Graphics.FromImage( bmp );
 
       graphics.Clear( System.Drawing.Color.White );

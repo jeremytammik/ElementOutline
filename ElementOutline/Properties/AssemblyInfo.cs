@@ -62,6 +62,8 @@ using System.Runtime.InteropServices;
 // 2019-09-03 2020.0.0.12 implemented GeoSnoop.DisplayLoops
 // 2019-09-04 2020.0.0.13 reduce GeoSnoop.DisplayLoops target rectangle so edge lines remain visible
 // 2019-09-04 2020.0.0.13 added caption
+// 2019-09-04 2020.0.0.13 adjust bitmap edge size, not target image edge size
+// 2019-09-04 2020.0.0.13 increased form image and edge sizes
 //
 [assembly: AssemblyVersion( "2020.0.0.13" )]
 [assembly: AssemblyFileVersion( "2020.0.0.13" )]

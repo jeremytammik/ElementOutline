@@ -109,6 +109,18 @@ namespace ElementOutline
     }
 
     /// <summary>
+    /// Grow or shrink bounding box in all directions 
+    /// by the given amount.
+    /// </summary>
+    public void AdjustBy( int d )
+    {
+      xmin -= d;
+      ymin -= d;
+      xmax += d;
+      ymax += d;
+    }
+
+    /// <summary>
     /// Expand bounding box to contain 
     /// the given new point.
     /// </summary>
