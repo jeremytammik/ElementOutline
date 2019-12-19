@@ -7,6 +7,7 @@ using System.Linq;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.DB.IFC;
 using Autodesk.Revit.UI;
 using ClipperLib;
@@ -256,6 +257,20 @@ namespace ElementOutline
     }
 
     /// <summary>
+    /// Return the union of the outermost room boundary
+    /// loop projected onto the XY plane.
+    /// </summary>
+    static public bool AddToUnionRoom(
+      Polygons union,
+      List<LineSegment> curves,
+      VertexLookup vl,
+      Clipper c,
+      IList<IList<BoundarySegment>> boundary )
+    {
+      return true;
+    }
+
+    /// <summary>
     /// Return the outer polygons defined 
     /// by the given line segments
     /// </summary>
@@ -332,14 +347,29 @@ namespace ElementOutline
 
       foreach( ElementId id in ids )
       {
-        Element e = doc.GetElement( id );
-        GeometryElement geo = e.get_Geometry( opt );
-
         c.Clear();
         vl.Clear();
         union.Clear();
 
-        AddToUnion( union, curves, vl, c, geo );
+        Element e = doc.GetElement( id );
+
+        if( e is Room )
+        {
+          IList<IList<BoundarySegment>> boundary
+            = (e as Room).GetBoundarySegments( 
+              new SpatialElementBoundaryOptions() );
+
+          // Ignore all loops except first, which is 
+          // hopefully outer -- and hopefully the room
+          // does not have several disjunct parts.
+
+          AddToUnionRoom( union, curves, vl, c, boundary );
+        }
+        else
+        {
+          GeometryElement geo = e.get_Geometry( opt );
+          AddToUnion( union, curves, vl, c, geo );
+        }
 
         //AddToUnion( union, vl, c, curves );
 
