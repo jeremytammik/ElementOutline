@@ -66,6 +66,8 @@ using System.Runtime.InteropServices;
 // 2019-09-04 2020.0.0.13 increased form image and edge sizes
 // 2019-12-19 2020.0.1.0 implemented CmdRoomOuterOutline
 // 2019-12-19 2020.0.1.0 refactored Cmd2dBoolean and implemented GetElementLoops
+// 2019-12-19 2020.0.1.0 implemented GetSelectedRooms
+// 2019-12-19 2020.0.1.0 started fleshing out CmdRoomOuterOutline
 //
 [assembly: AssemblyVersion( "2020.0.1.0" )]
 [assembly: AssemblyFileVersion( "2020.0.1.0" )]

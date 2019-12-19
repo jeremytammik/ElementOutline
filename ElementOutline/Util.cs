@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 #endregion // Namespaces
@@ -81,6 +82,60 @@ namespace ElementOutline
         {
           refs = sel.PickObjects( ObjectType.Element,
             "Please select elements for 2D outline generation." );
+        }
+        catch( Autodesk.Revit.Exceptions
+          .OperationCanceledException )
+        {
+          return ids;
+        }
+        ids = new List<ElementId>(
+          refs.Select<Reference, ElementId>(
+            r => r.ElementId ) );
+      }
+      return ids;
+    }
+
+    /// <summary>
+    /// Allow only room to be selected.
+    /// </summary>
+    class RoomSelectionFilter : ISelectionFilter
+    {
+      public bool AllowElement( Element e )
+      {
+        return e is Room;
+      }
+
+      public bool AllowReference( Reference r, XYZ p )
+      {
+        return true;
+      }
+    }
+
+    static public IEnumerable<ElementId> GetSelectedRooms(
+      UIDocument uidoc )
+    {
+      Document doc = uidoc.Document;
+
+      // Do we have any pre-selected elements?
+
+      Selection sel = uidoc.Selection;
+
+      IEnumerable<ElementId> ids = sel.GetElementIds()
+        .Where<ElementId>( id 
+          => (doc.GetElement( id ) is Room) );
+
+      // If no elements were pre-selected, 
+      // prompt for post-selection
+
+      if( null == ids || 0 == ids.Count() )
+      {
+        IList<Reference> refs = null;
+
+        try
+        {
+          refs = sel.PickObjects( ObjectType.Element,
+            new RoomSelectionFilter(),
+            "Please select rooms for 2D outline generation." );
         }
         catch( Autodesk.Revit.Exceptions
           .OperationCanceledException )
