@@ -304,6 +304,13 @@ namespace ElementOutline
       return loops;
     }
 
+    /// <summary>
+    /// Create JtLoops representing the given element
+    /// 2D outlines by retrieving the element solid 
+    /// faces and meshes in the given view, projecting 
+    /// them onto the XY plane and executing 2d Boolean 
+    /// unions on them.
+    /// </summary>
     public static Dictionary<int, JtLoops> 
       GetElementLoops(
         View view,
@@ -398,7 +405,8 @@ namespace ElementOutline
       string filepath = Path.Combine( Util.OutputFolderPath,
          doc.Title + "_element_2d_boolean_outline.json" );
 
-      JtWindowHandle hwnd = new JtWindowHandle( uiapp.MainWindowHandle );
+      JtWindowHandle hwnd = new JtWindowHandle( 
+        uiapp.MainWindowHandle );
 
       string caption = doc.Title + " 2D Booleans";
 
