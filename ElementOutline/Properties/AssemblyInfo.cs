@@ -65,6 +65,7 @@ using System.Runtime.InteropServices;
 // 2019-09-04 2020.0.0.13 adjust bitmap edge size, not target image edge size
 // 2019-09-04 2020.0.0.13 increased form image and edge sizes
 // 2019-12-19 2020.0.1.0 implemented CmdRoomOuterOutline
+// 2019-12-19 2020.0.1.0 refactored Cmd2dBoolean and implemented GetElementLoops
 //
 [assembly: AssemblyVersion( "2020.0.1.0" )]
 [assembly: AssemblyFileVersion( "2020.0.1.0" )]

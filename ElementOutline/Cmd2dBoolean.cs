@@ -287,7 +287,7 @@ namespace ElementOutline
     /// <summary>
     /// Convert Clipper polygons to JtLoops
     /// </summary>
-    JtLoops ConvertToLoops( Polygons union )
+    static JtLoops ConvertToLoops( Polygons union )
     {
       JtLoops loops = new JtLoops( union.Count );
       JtLoop loop = new JtLoop( union.First<Polygon>().Count );
@@ -304,37 +304,12 @@ namespace ElementOutline
       return loops;
     }
 
-    public Result Execute(
-      ExternalCommandData commandData,
-      ref string message,
-      ElementSet elements )
+    public static Dictionary<int, JtLoops> 
+      GetElementLoops(
+        View view,
+        ICollection<ElementId> ids )
     {
-      UIApplication uiapp = commandData.Application;
-      UIDocument uidoc = uiapp.ActiveUIDocument;
-      Application app = uiapp.Application;
-      Document doc = uidoc.Document;
-
-      if( null == doc )
-      {
-        Util.ErrorMsg( "Please run this command in a valid"
-          + " Revit project document." );
-        return Result.Failed;
-      }
-
-      ICollection<ElementId> ids
-        = Util.GetSelectedElements( uidoc );
-
-      if( (null == ids) || (0 == ids.Count) )
-      {
-        return Result.Cancelled;
-      }
-
-      // Third attempt: create the element 2D outline 
-      // from element solid faces and meshes in current 
-      // view by projecting them onto the XY plane and 
-      // executing 2d Boolean unions on them.
-
-      View view = doc.ActiveView;
+      Document doc = view.Document;
 
       Options opt = new Options
       {
@@ -382,6 +357,43 @@ namespace ElementOutline
           booleanLoops.Add( id.IntegerValue, loops );
         }
       }
+      return booleanLoops;
+    }
+
+    public Result Execute(
+      ExternalCommandData commandData,
+      ref string message,
+      ElementSet elements )
+    {
+      UIApplication uiapp = commandData.Application;
+      UIDocument uidoc = uiapp.ActiveUIDocument;
+      Application app = uiapp.Application;
+      Document doc = uidoc.Document;
+
+      if( null == doc )
+      {
+        Util.ErrorMsg( "Please run this command in a valid"
+          + " Revit project document." );
+        return Result.Failed;
+      }
+
+      ICollection<ElementId> ids
+        = Util.GetSelectedElements( uidoc );
+
+      if( (null == ids) || (0 == ids.Count) )
+      {
+        return Result.Cancelled;
+      }
+
+      // Third attempt: create the element 2D outline 
+      // from element solid faces and meshes in current 
+      // view by projecting them onto the XY plane and 
+      // executing 2d Boolean unions on them.
+
+      View view = doc.ActiveView;
+
+      Dictionary<int, JtLoops> booleanLoops 
+        = GetElementLoops( view, ids );
 
       string filepath = Path.Combine( Util.OutputFolderPath,
          doc.Title + "_element_2d_boolean_outline.json" );
