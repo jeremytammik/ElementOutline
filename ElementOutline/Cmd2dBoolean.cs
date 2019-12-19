@@ -244,7 +244,7 @@ namespace ElementOutline
         if( null != inst )
         {
           GeometryElement txGeoElem
-            = inst.GetInstanceGeometry( 
+            = inst.GetInstanceGeometry(
               Transform.Identity ); // inst.Transform
 
           AddToUnion( union, curves, vl, c, txGeoElem );
@@ -267,7 +267,44 @@ namespace ElementOutline
       Clipper c,
       IList<IList<BoundarySegment>> boundary )
     {
-      return true;
+      int n = boundary.Count;
+
+      Debug.Assert( 0 < n,
+        "expected at least one room boundary loop" );
+
+      Polygons faces = new Polygons( n );
+      Polygon face2d = new Polygon( boundary[ 0 ].Count );
+
+      foreach( IList<BoundarySegment> loop in boundary )
+      {
+        // Outer curve loops are counter-clockwise
+
+        face2d.Clear();
+
+        foreach( BoundarySegment s in loop )
+        {
+          IList<XYZ> pts = s.GetCurve().Tessellate();
+
+          IntPoint a = vl.GetOrAdd( pts[ 0 ] );
+
+          face2d.Add( a );
+
+          n = pts.Count;
+
+          for( int i = 1; i < n; ++i )
+          {
+            IntPoint b = vl.GetOrAdd( pts[ i ] );
+
+            if( b != a )
+            {
+              face2d.Add( b );
+              a = b;
+            }
+          }
+          faces.Add( face2d );
+        }
+      }
+      return c.AddPaths( faces, PolyType.ptSubject, true );
     }
 
     /// <summary>
@@ -311,7 +348,7 @@ namespace ElementOutline
         loop.Clear();
         foreach( IntPoint p in poly )
         {
-          loop.Add( new Point2dInt( 
+          loop.Add( new Point2dInt(
             (int) p.X, (int) p.Y ) );
         }
         loops.Add( loop );
@@ -326,7 +363,7 @@ namespace ElementOutline
     /// them onto the XY plane and executing 2d Boolean 
     /// unions on them.
     /// </summary>
-    public static Dictionary<int, JtLoops> 
+    public static Dictionary<int, JtLoops>
       GetElementLoops(
         View view,
         ICollection<ElementId> ids )
@@ -356,7 +393,7 @@ namespace ElementOutline
         if( e is Room )
         {
           IList<IList<BoundarySegment>> boundary
-            = (e as Room).GetBoundarySegments( 
+            = (e as Room).GetBoundarySegments(
               new SpatialElementBoundaryOptions() );
 
           // Ignore all loops except first, which is 
@@ -429,13 +466,13 @@ namespace ElementOutline
 
       View view = doc.ActiveView;
 
-      Dictionary<int, JtLoops> booleanLoops 
+      Dictionary<int, JtLoops> booleanLoops
         = GetElementLoops( view, ids );
 
       string filepath = Path.Combine( Util.OutputFolderPath,
          doc.Title + "_element_2d_boolean_outline.json" );
 
-      JtWindowHandle hwnd = new JtWindowHandle( 
+      JtWindowHandle hwnd = new JtWindowHandle(
         uiapp.MainWindowHandle );
 
       string caption = doc.Title + " 2D Booleans";
