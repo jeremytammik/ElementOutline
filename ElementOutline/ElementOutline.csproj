@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="App.cs" />
     <Compile Include="Cmd2dBoolean.cs" />
+    <Compile Include="CmdRoomOuterOutline.cs" />
     <Compile Include="CmdUploadRooms.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="ContiguousCurveSorter.cs" />
