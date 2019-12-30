@@ -307,6 +307,39 @@ namespace ElementOutline
       return c.AddPaths( faces, PolyType.ptSubject, true );
     }
 
+    //static List<ElementId> GetRoomBoundaryIds(
+    //  Room room,
+    //  SpatialElementBoundaryOptions seb_opt )
+    //{
+    //  List<ElementId> ids = null;
+
+    //  IList<IList<BoundarySegment>> sloops
+    //    = room.GetBoundarySegments( seb_opt );
+
+    //  if( null != sloops ) // the room may not be bounded
+    //  {
+    //    Debug.Assert( 1 == sloops.Count, "this add-in "
+    //      + "currently supports only rooms with one "
+    //      + "single boundary loop" );
+
+    //    ids = new List<ElementId>();
+
+    //    foreach( IList<BoundarySegment> sloop in sloops )
+    //    {
+    //      foreach( BoundarySegment s in sloop )
+    //      {
+    //        ids.Add( s.ElementId );
+    //      }
+
+    //      // Skip out after first segement loop - ignore
+    //      // rooms with holes and disjunct parts
+
+    //      break;
+    //    }
+    //  }
+    //  return ids;
+    //}
+
     /// <summary>
     /// Create a JtLoop representing the 2D outline of 
     /// the given room including all its bounding elements
@@ -316,17 +349,11 @@ namespace ElementOutline
     /// them onto the XY plane and executing 2D Boolean 
     /// unions on them.
     /// </summary>
-    public static JtLoop GetRoomOuterBoundaryLoop(
+    public static JtLoops GetRoomOuterBoundaryLoops(
       Room room,
       SpatialElementBoundaryOptions seb_opt,
       View view )
     {
-      List<ElementId> boundary_ids
-        = GetRoomBoundaryIds( room, seb_opt );
-      IList<IList<BoundarySegment>> sloops
-        = room.GetBoundarySegments( seb_opt );
-
-
       Document doc = view.Document;
 
       Options opt = new Options
@@ -338,59 +365,65 @@ namespace ElementOutline
       VertexLookup vl = new VertexLookup();
       List<LineSegment> curves = new List<LineSegment>();
       Polygons union = new Polygons();
-      Dictionary<int, JtLoops> booleanLoops
-        = new Dictionary<int, JtLoops>( ids.Count );
+      JtLoops loops = null;
 
-      foreach( ElementId id in ids )
+      IList<IList<BoundarySegment>> boundary
+        = room.GetBoundarySegments(
+          new SpatialElementBoundaryOptions() );
+
+      if( null != boundary ) // the room may not be bounded
       {
-        c.Clear();
-        vl.Clear();
-        union.Clear();
+        Debug.Assert( 1 == boundary.Count,
+          "this add-in currently supports only rooms "
+          + "with one single boundary loop" );
 
-        Element e = doc.GetElement( id );
+        // Ignore all loops except first, which is 
+        // hopefully outer -- and hopefully the room
+        // does not have several disjunct parts.
+        // Ignore holes in the room and 
+        // multiple disjunct parts.
 
-        if( e is Room )
+        AddToUnionRoom( union, curves, vl, c, boundary );
+
+        // Retrieve bounding elements
+
+        List<ElementId> ids = new List<ElementId>();
+
+        foreach( IList<BoundarySegment> loop in boundary )
         {
-          IList<IList<BoundarySegment>> boundary
-            = (e as Room).GetBoundarySegments(
-              new SpatialElementBoundaryOptions() );
+          foreach( BoundarySegment s in loop )
+          {
+            ids.Add( s.ElementId );
+          }
 
-          // Ignore all loops except first, which is 
-          // hopefully outer -- and hopefully the room
-          // does not have several disjunct parts.
+          // Skip out after first segement loop - ignore
+          // rooms with holes and disjunct parts
 
-          AddToUnionRoom( union, curves, vl, c, boundary );
+          break;
         }
-        else
+
+        foreach( ElementId id in ids )
         {
+          Element e = doc.GetElement( id );
+
           GeometryElement geo = e.get_Geometry( opt );
           AddToUnion( union, curves, vl, c, geo );
+
+          bool succeeded = c.Execute( ClipType.ctUnion, union,
+            PolyFillType.pftPositive, PolyFillType.pftPositive );
+
+          if( 0 == union.Count )
+          {
+            Debug.Print( string.Format(
+              "No outline found for {0} <{1}>",
+              e.Name, e.Id.IntegerValue ) );
+          }
         }
+        loops = ConvertToLoops( union );
 
-        //AddToUnion( union, vl, c, curves );
-
-        //c.AddPaths( subjects, PolyType.ptSubject, true );
-        //c.AddPaths( clips, PolyType.ptClip, true );
-
-        bool succeeded = c.Execute( ClipType.ctUnion, union,
-          PolyFillType.pftPositive, PolyFillType.pftPositive );
-
-        if( 0 == union.Count )
-        {
-          Debug.Print( string.Format(
-            "No outline found for {0} <{1}>",
-            e.Name, e.Id.IntegerValue ) );
-        }
-        else
-        {
-          JtLoops loops = ConvertToLoops( union );
-
-          loops.NormalizeLoops();
-
-          booleanLoops.Add( id.IntegerValue, loops );
-        }
+        loops.NormalizeLoops();
       }
-      return booleanLoops;
+      return loops;
     }
 
 
@@ -521,6 +554,22 @@ namespace ElementOutline
       return booleanLoops;
     }
 
+    public static void CreateOutput(
+      string file_content,
+      Document doc,
+      JtWindowHandle hwnd,
+      Dictionary<int, JtLoops> booleanLoops )
+    {
+      string filepath = Path.Combine( Util.OutputFolderPath,
+         doc.Title + "_" + file_content + ".json" );
+
+      string caption = doc.Title + " 2D Booleans";
+
+      Util.ExportLoops( filepath, hwnd, caption,
+        doc, booleanLoops );
+
+    }
+
     public Result Execute(
       ExternalCommandData commandData,
       ref string message,
@@ -556,16 +605,11 @@ namespace ElementOutline
       Dictionary<int, JtLoops> booleanLoops
         = GetElementLoops( view, ids );
 
-      string filepath = Path.Combine( Util.OutputFolderPath,
-         doc.Title + "_element_2d_boolean_outline.json" );
-
       JtWindowHandle hwnd = new JtWindowHandle(
         uiapp.MainWindowHandle );
 
-      string caption = doc.Title + " 2D Booleans";
-
-      Util.ExportLoops( filepath, hwnd, caption,
-        doc, booleanLoops );
+      CreateOutput( "element_2d_boolean_outline", 
+        doc, hwnd, booleanLoops );
 
       return Result.Succeeded;
     }
