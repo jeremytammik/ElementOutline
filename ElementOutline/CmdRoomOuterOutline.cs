@@ -1,5 +1,6 @@
 ﻿#region Namespaces
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
@@ -13,6 +14,45 @@ namespace ElementOutline
   [Transaction( TransactionMode.ReadOnly )]
   class CmdRoomOuterOutline : IExternalCommand
   {
+    /// <summary>
+    /// Return the elements bounding the first and 
+    /// hopefully outermost boundary loop of the
+    /// given room. Ignore holes in the room and 
+    /// multiple disjunct parts.
+    /// </summary>
+    static List<ElementId> GetRoomBoundaryIds( 
+      Room room,
+      SpatialElementBoundaryOptions seb_opt )
+    {
+      List<ElementId> ids = null;
+
+      IList<IList<BoundarySegment>> sloops
+        = room.GetBoundarySegments( seb_opt );
+
+      if( null != sloops ) // the room may not be bounded
+      {
+        Debug.Assert( 1 == sloops.Count, "this add-in "
+          + "currently supports only rooms with one "
+          + "single boundary loop" );
+
+        ids = new List<ElementId>();
+
+        foreach( IList<BoundarySegment> sloop in sloops )
+        {
+          foreach( BoundarySegment s in sloop )
+          {
+            ids.Add( s.ElementId );
+          }
+
+          // Skip out after first segement loop - ignore
+          // rooms with holes and disjunct parts
+
+          break;
+        }
+      }
+      return ids;
+    }
+
     public Result Execute(
       ExternalCommandData commandData,
       ref string message,
@@ -38,22 +78,30 @@ namespace ElementOutline
         return Result.Cancelled;
       }
 
+      View view = doc.ActiveView;
+
       SpatialElementBoundaryOptions seb_opt
         = new SpatialElementBoundaryOptions();
-
-      CurveLoop loop = null;
 
       foreach( ElementId id in ids )
       {
         Room room = doc.GetElement( id ) as Room;
 
-        IList<IList<BoundarySegment>> sloops
-          = room.GetBoundarySegments( seb_opt );
+        JtLoop loop 
+          = Cmd2dBoolean.GetRoomOuterBoundaryLoop( 
+            room, seb_opt, view );
 
-        if( null == sloops ) // the room may not be bounded
+        if( null == loop ) // the room may not be bounded
         {
           continue;
         }
+
+
+        List<ElementId> boundary_ids 
+          = GetRoomBoundaryIds( room, seb_opt );
+        IList<IList<BoundarySegment>> sloops
+          = room.GetBoundarySegments( seb_opt );
+
 
         foreach( IList<BoundarySegment> sloop in sloops )
         {
@@ -79,7 +127,6 @@ namespace ElementOutline
 
           break;
         }
-
       }
       return Result.Succeeded;
     }

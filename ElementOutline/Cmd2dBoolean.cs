@@ -308,6 +308,93 @@ namespace ElementOutline
     }
 
     /// <summary>
+    /// Create a JtLoop representing the 2D outline of 
+    /// the given room including all its bounding elements
+    /// by creating the inner room boundary loop and 
+    /// uniting it with the bounding elements solid faces 
+    /// and meshes in the given view, projecting 
+    /// them onto the XY plane and executing 2D Boolean 
+    /// unions on them.
+    /// </summary>
+    public static JtLoop GetRoomOuterBoundaryLoop(
+      Room room,
+      SpatialElementBoundaryOptions seb_opt,
+      View view )
+    {
+      List<ElementId> boundary_ids
+        = GetRoomBoundaryIds( room, seb_opt );
+      IList<IList<BoundarySegment>> sloops
+        = room.GetBoundarySegments( seb_opt );
+
+
+      Document doc = view.Document;
+
+      Options opt = new Options
+      {
+        View = view
+      };
+
+      Clipper c = new Clipper();
+      VertexLookup vl = new VertexLookup();
+      List<LineSegment> curves = new List<LineSegment>();
+      Polygons union = new Polygons();
+      Dictionary<int, JtLoops> booleanLoops
+        = new Dictionary<int, JtLoops>( ids.Count );
+
+      foreach( ElementId id in ids )
+      {
+        c.Clear();
+        vl.Clear();
+        union.Clear();
+
+        Element e = doc.GetElement( id );
+
+        if( e is Room )
+        {
+          IList<IList<BoundarySegment>> boundary
+            = (e as Room).GetBoundarySegments(
+              new SpatialElementBoundaryOptions() );
+
+          // Ignore all loops except first, which is 
+          // hopefully outer -- and hopefully the room
+          // does not have several disjunct parts.
+
+          AddToUnionRoom( union, curves, vl, c, boundary );
+        }
+        else
+        {
+          GeometryElement geo = e.get_Geometry( opt );
+          AddToUnion( union, curves, vl, c, geo );
+        }
+
+        //AddToUnion( union, vl, c, curves );
+
+        //c.AddPaths( subjects, PolyType.ptSubject, true );
+        //c.AddPaths( clips, PolyType.ptClip, true );
+
+        bool succeeded = c.Execute( ClipType.ctUnion, union,
+          PolyFillType.pftPositive, PolyFillType.pftPositive );
+
+        if( 0 == union.Count )
+        {
+          Debug.Print( string.Format(
+            "No outline found for {0} <{1}>",
+            e.Name, e.Id.IntegerValue ) );
+        }
+        else
+        {
+          JtLoops loops = ConvertToLoops( union );
+
+          loops.NormalizeLoops();
+
+          booleanLoops.Add( id.IntegerValue, loops );
+        }
+      }
+      return booleanLoops;
+    }
+
+
+    /// <summary>
     /// Return the outer polygons defined 
     /// by the given line segments
     /// </summary>

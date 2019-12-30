@@ -69,6 +69,7 @@ using System.Runtime.InteropServices;
 // 2019-12-19 2020.0.1.0 implemented GetSelectedRooms
 // 2019-12-19 2020.0.1.0 started fleshing out CmdRoomOuterOutline
 // 2019-12-19 2020.0.1.1 implemented AddToUnionRoom
+// 2019-12-30 2020.0.1.1 worked on GetRoomOuterBoundaryLoop
 //
 [assembly: AssemblyVersion( "2020.0.1.1" )]
 [assembly: AssemblyFileVersion( "2020.0.1.1" )]
