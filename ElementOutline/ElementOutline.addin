@@ -18,6 +18,15 @@
     <VendorId>com.typepad.thebuildingcoder</VendorId>
     <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
   </AddIn>
+  <AddIn Type="Command">
+    <Text>Room Outer Outline</Text>
+    <Description>Determine room outer outline including bounding elements from 2D Boolean union of projected solid faces and meshes</Description>
+    <Assembly>ElementOutline.dll</Assembly>
+    <FullClassName>ElementOutline.CmdRoomOuterOutline</FullClassName>
+    <ClientId>6cafb249-b7b9-496d-a825-d7b8906c76e1</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
   <!--
   <AddIn Type="Application">
     <Name>Application ElementOutline</Name>

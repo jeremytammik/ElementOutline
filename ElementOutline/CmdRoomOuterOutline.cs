@@ -62,6 +62,13 @@ namespace ElementOutline
         }
         booleanLoops.Add( id.IntegerValue, loops );
       }
+
+      JtWindowHandle hwnd = new JtWindowHandle(
+        uiapp.MainWindowHandle );
+
+      Cmd2dBoolean.CreateOutput( "room_outer_outline",
+        "Room Outer Outline", doc, hwnd, booleanLoops );
+
       return Result.Succeeded;
     }
   }

@@ -23,7 +23,7 @@ namespace ElementOutline
     /// <summary>
     /// Width of the form to generate.
     /// </summary>
-    const int _form_width = 800;
+    const int _form_width = 300;
 
     /// <summary>
     /// Pen size.

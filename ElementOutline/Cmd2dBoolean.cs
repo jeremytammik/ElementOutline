@@ -404,19 +404,25 @@ namespace ElementOutline
 
         foreach( ElementId id in ids )
         {
-          Element e = doc.GetElement( id );
+          // Skip invalid element ids, generated, for 
+          // instance, by a room separator line.
 
-          GeometryElement geo = e.get_Geometry( opt );
-          AddToUnion( union, curves, vl, c, geo );
-
-          bool succeeded = c.Execute( ClipType.ctUnion, union,
-            PolyFillType.pftPositive, PolyFillType.pftPositive );
-
-          if( 0 == union.Count )
+          if( !id.Equals( ElementId.InvalidElementId ) )
           {
-            Debug.Print( string.Format(
-              "No outline found for {0} <{1}>",
-              e.Name, e.Id.IntegerValue ) );
+            Element e = doc.GetElement( id );
+
+            GeometryElement geo = e.get_Geometry( opt );
+            AddToUnion( union, curves, vl, c, geo );
+
+            bool succeeded = c.Execute( ClipType.ctUnion, union,
+              PolyFillType.pftPositive, PolyFillType.pftPositive );
+
+            if( 0 == union.Count )
+            {
+              Debug.Print( string.Format(
+                "No outline found for {0} <{1}>",
+                e.Name, e.Id.IntegerValue ) );
+            }
           }
         }
         loops = ConvertToLoops( union );
@@ -556,6 +562,7 @@ namespace ElementOutline
 
     public static void CreateOutput(
       string file_content,
+      string description,
       Document doc,
       JtWindowHandle hwnd,
       Dictionary<int, JtLoops> booleanLoops )
@@ -563,11 +570,10 @@ namespace ElementOutline
       string filepath = Path.Combine( Util.OutputFolderPath,
          doc.Title + "_" + file_content + ".json" );
 
-      string caption = doc.Title + " 2D Booleans";
+      string caption = doc.Title + " " + description;
 
       Util.ExportLoops( filepath, hwnd, caption,
         doc, booleanLoops );
-
     }
 
     public Result Execute(
@@ -608,8 +614,8 @@ namespace ElementOutline
       JtWindowHandle hwnd = new JtWindowHandle(
         uiapp.MainWindowHandle );
 
-      CreateOutput( "element_2d_boolean_outline", 
-        doc, hwnd, booleanLoops );
+      CreateOutput( "element_2d_boolean_outline",
+        "2D Booleans", doc, hwnd, booleanLoops );
 
       return Result.Succeeded;
     }
