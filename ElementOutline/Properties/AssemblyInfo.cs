@@ -73,6 +73,7 @@ using System.Runtime.InteropServices;
 // 2019-12-30 2020.0.1.1 implemented CreateOutput
 // 2020-01-01 2020.0.1.2 sucessfully tested GetRoomOuterBoundaryLoop
 // 2020-01-01 2020.0.1.2 skip room separator in GetRoomOuterBoundaryLoop
+// 2020-01-01 2020.0.1.2 successfully tested on both wall width and room separator sample models
 //
 [assembly: AssemblyVersion( "2020.0.1.2" )]
 [assembly: AssemblyFileVersion( "2020.0.1.2" )]

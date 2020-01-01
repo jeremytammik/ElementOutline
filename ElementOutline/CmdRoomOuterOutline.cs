@@ -1,6 +1,5 @@
 ﻿#region Namespaces
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
@@ -31,7 +30,7 @@ namespace ElementOutline
         return Result.Failed;
       }
 
-      IEnumerable<ElementId> ids 
+      IEnumerable<ElementId> ids
         = Util.GetSelectedRooms( uidoc );
 
       if( (null == ids) || (0 == ids.Count()) )
@@ -45,14 +44,14 @@ namespace ElementOutline
         = new SpatialElementBoundaryOptions();
 
       Dictionary<int, JtLoops> booleanLoops
-        = new Dictionary<int, JtLoops>( 
+        = new Dictionary<int, JtLoops>(
           ids.Count<ElementId>() );
 
       foreach( ElementId id in ids )
       {
         Room room = doc.GetElement( id ) as Room;
 
-        JtLoops loops 
+        JtLoops loops
           = Cmd2dBoolean.GetRoomOuterBoundaryLoops(
             room, seb_opt, view );
 
