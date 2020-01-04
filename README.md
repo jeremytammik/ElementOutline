@@ -246,8 +246,6 @@ I was finding it difficult to create the closed loop necessary, and particularly
 
 Could you point me in the right direction, possibly some sample code that I could examine and see if I could get it to work to my requirements.
 
-Hope you have a good festive season.
-
 **Answer:** I see several possible alternative approaches avoiding the use of `CreateViaOffset`, based on:
 
 - Room boundary curves and wall thicknesses
