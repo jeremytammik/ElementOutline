@@ -56,15 +56,15 @@ Here are three sample images highlighting bathtubs, doors and toilets, respectiv
 
 Bathtubs:
 
-<img src="img/birdseye_view_bathtubs.png" alt="Bathtubs" title="Bathtubs" width="430"/>
+<img src="img/birdseye_view_bathtubs.png" alt="Bathtubs" title="Bathtubs" width="300"/>
 
 Doors:
 
-<img src="img/birdseye_view_internal_doors.png" alt="Doors" title="Doors" width="430"/>
+<img src="img/birdseye_view_internal_doors.png" alt="Doors" title="Doors" width="300"/>
 
 Toilets:
 
-<img src="img/birdseye_view_toilets.png" alt="Toilets" title="Toilets" width="430"/>
+<img src="img/birdseye_view_toilets.png" alt="Toilets" title="Toilets" width="300"/>
 
 element id, unique id, list of space delimited pairs of X Y vertex coordinates in millimetres
 
