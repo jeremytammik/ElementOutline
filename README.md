@@ -2,6 +2,14 @@
 
 Revit C# .NET add-in to export 2D outlines of RVT project `Element` instances.
 
+The add-in implements three external commands:
+
+- [Command](#command)
+- [Cmd2dBoolean](#cmd2dboolean)
+- [CmdRoomOuterOutline](#cmdroomouteroutline)
+
+##<a name="command"></a> Command
+
 This code was originally implemented as part of (and just now extracted from)
 the [RoomEditorApp project](https://github.com/jeremytammik/RoomEditorApp).
 
@@ -36,6 +44,195 @@ E.g., for the desk, you notice the little bulges for the desk drawer handles sti
 In July 2019, I checked with the development team and asked whether they could suggest a better way to retrieve the 2D outline of an element.
 
 They responded that my `ExtrusionAnalyzer` approach seems like the best (and maybe only) way to achieve this right now.
+
+
+##<a name="cmd2dboolean"></a> Cmd2dBoolean
+
+I took another look at the `ExtrusionAnalyzer` approach described above to address the task of generating the 2D outline of Revit elements with the aim to generate a polygon describing the visual bird-view look of an element.
+This is not a rendered view, just coordinates of a polygon around the element.
+The goal is: given an element id, retrieve a list of X,Y coordinates describing the bird-view look of an element.
+
+Here are three sample images highlighting bathtubs, doors and toilets, respectively:
+
+Bathtubs:
+
+<img src="img/2_bathtubs.png" alt="Bathtubs" title="Bathtubs" width="318"/>
+
+Doors:
+
+<img src="img/2_internal_doors.png" alt="Doors" title="Doors" width="318"/>
+
+Toilets:
+
+<img src="img/2_toilets.png" alt="Toilets" title="Toilets" width="318"/>
+
+element id, unique id, list of space delimited pairs of X Y vertex coordinates in millimetres
+
+2019-07-09 ElementPolygon prototype -- Implemented ElementPolygon, folder renamed to ElmtPoly
+
+2019-07-23 Implemented ElementOutline
+unchanged code extracted from RoomEditorApp https://github.com/jeremytammik/ElementOutline/releases/tag/2020.0.0.0
+modified for buildots https://github.com/jeremytammik/ElementOutline/releases/tag/2020.0.0.1
+exports outlines to json https://github.com/jeremytammik/ElementOutline/releases/tag/2020.0.0.2
+
+element_outline_four_selected.png
+__pt_build_b_2020_element_outline.json
+
+Date: Wednesday July24 2019 at 07:59
+Subject: Generating 2D map of elements
+
+i completed a first stab at generating and exporting the 2D element outlines using the extrusion analyser:
+
+https://github.com/jeremytammik/ElementOutline
+
+the repository readme includes the specification of what we wish to achieve, as far as i am aware.
+
+plese check that and add whatever may be missing.
+
+here is an example of selecting four elements in your sample model, highlighted in blue:
+
+/a/special/buildots/task_2d_element_map/element_outline_four_selected.png
+
+that generates the following JSON file including their outline in SVG format:
+
+```
+{"name":"pt2+20+7", "id":"576786", "uid":"bc43ed2e-7e23-4f0e-9588-ab3c43f3d388-0008cd12", "svg_path":"M-56862 -9150 L-56572 -9150 -56572 -14186 -56862 -14186Z"}
+{"name":"pt70/210", "id":"576925", "uid":"bc43ed2e-7e23-4f0e-9588-ab3c43f3d388-0008cd9d", "svg_path":"M-55672 -11390 L-55672 -11290 -55656 -11290 -55656 -11278 -55087 -11278 -55087 -11270 -55076 -11270 -55076 -11242 -55182 -11242 -55182 -11214 -55048 -11214 -55048 -11270 -55037 -11270 -55037 -11278 -54988 -11278 -54988 -11290 -54972 -11290 -54972 -11390Z"}
+{"name":"pt80/115", "id":"576949", "uid":"bc43ed2e-7e23-4f0e-9588-ab3c43f3d388-0008cdb5", "svg_path":"M-56572 -10580 L-56572 -9430 -55772 -9430 -55772 -10580Z"}
+{"name":"מנוע מזגן מפוצל", "id":"576972", "uid":"bc43ed2e-7e23-4f0e-9588-ab3c43f3d388-0008cdcc", "svg_path":"M-56753 -8031 L-56713 -8031 -56713 -8018 -56276 -8018 -56276 -8031 -56265 -8031 -56265 -8109 -56276 -8109 -56276 -8911 -56252 -8911 -56252 -8989 -56276 -8989 -56276 -9020 -56277 -9020 -56278 -9020 -56711 -9020 -56713 -9020 -56713 -8989 -56753 -8989 -56753 -8911 -56713 -8911 -56713 -8109 -56753 -8109Z"}
+```
+
+both files are attached to this message.
+
+i hope this satisfies the requirements.
+
+the advantage of the SVG path instead of just raw coordinates is that multiple loops can be easily specified.
+
+M, L and Z stand for moveto, lineto and close, respectively. repetitions of L can be omitted. nice and succinct.
+
+next, i assume you would nee to define exactly which elements you want to export, so that the manaul selection can be replaced by a automatic one.
+
+concave hull: 
+
+- http://ubicomp.algoritmi.uminho.pt/local/concavehull.html
+- https://towardsdatascience.com/the-concave-hull-c649795c0f0f
+- /a/src/cpp/MIConvexHull/
+- https://github.com/kubkon/powercrust
+- /a/src/cpp/powercrust/
+- 2D concave hull implementation: /a/src/cpp/concaveman-cpp/src/main/cpp/
+- https://adared.ch/concaveman-cpp-a-very-fast-2d-concave-hull-maybe-even-faster-with-c-and-python/
+- https://en.wikipedia.org/wiki/Alpha_shape
+- https://www.codeproject.com/Articles/1201438/The-Concave-Hull-of-a-Set-of-Points
+- http://www.cs.ubc.ca/research/flann/
+  
+2D outline:
+
+- https://github.com/eppz/Unity.Library.eppz.Geometry
+- https://github.com/eppz/Clipper
+- https://github.com/eppz/Triangle.NET
+- https://en.wikipedia.org/wiki/Sweep_line_algorithm
+- https://stackoverflow.com/questions/4213117/the-generalization-of-bentley-ottmann-algorithm
+- https://ggolikov.github.io/bentley-ottman/
+- Joining unordered line segments -- https://stackoverflow.com/questions/1436091/joining-unordered-line-segments
+- join all line segments into closed polygons
+- union all the polygons using clipper
+- List<IntPoint2d> vertices;
+- List<Pair<int,int>> segments;
+- Dictionary<IntPoint2d,int> map_end_point_to_segments_both_directions;
+- http://www3.cs.stonybrook.edu/~algorith/implement/sweep/implement.shtml
+- ~/downloads/top_sweep/
+- https://github.com/mikhaildubov/Computational-geometry/blob/master/2)%20Any%20segments%20intersection/src/ru/dubov/anysegmentsintersect/SegmentsIntersect.java
+- https://github.com/jeremytammik/wykobi/blob/master/wykobi_naive_group_intersections.inl
+
+alpha shape:
+
+- https://pypi.org/project/alphashape/
+- https://alphashape.readthedocs.io/
+
+outline_solids_and_booleans.png
+
+outline_solids_and_booleans.png
+
+We determined that some elements have no solids, just meshes, hence the extrusion anayser approach cannot be used
+
+Working on the 2D contour outline following algorithm here:
+
+https://github.com/jeremytammik/ElementOutline
+
+Plan to look at the alpha shape implementation here:
+
+https://pypi.org/project/alphashape
+
+i worked quite a lot on a contour follower, but it is turning out quite complex. i have another idea now for a much simpler approach using 2D Boolean operations, uniting all the solid faces and mesh faces into one single 2D polygon set. i'll try that next and expect immediate and robust results.
+
+still working extensively on this. do you think we can get by with handling only meshes and solids? in that case, the analysis needs to be run in a 3D view. in a 2D view, the solid of the bathtub is tested on is empty (zero faces, zero volume), and all the rest is just curves. i'll switch to a 3D view and test the bathtub and the mesh element you mention above.
+
+i now completed a new poly2d implementation using 2D Booleans instead of the solids and extrusion analyser. i expect it is significantly faster. have not benchmarked, yet, however. i have not tested it on a mesh yet. can you provide the mesh sample element from the amidav model in a separate file, please? i cannot open the amidav model. revit 2020 says the file is corrupted. thank you. the ElementOutline release 2020.0.0.10 exportes outlines from both solids and 2d booleans and generates identical results for both, so that is a good sign:
+
+https://github.com/jeremytammik/ElementOutline/releases/tag/2020.0.0.10
+
+maybe meshes and solids cover all requirements. i am still experimenting and testing. a test model with a collection of test cases would be handy. for instance, a small model with just a handful of elements that cover all possible variations.
+
+what is missing besided meshes and solids?
+
+response: I received the new sample model from you, proj_with_mesh.rvt. It contains one single wall. That wall is not represented by a mesh, but by a solid, just as all other walls, afaict. The results of running the solid extrusion analyser and the 2d boolean command on it are identical. Furthermore, snooping its geometry in a 3D view, i see one single solid and zero meshes. did you send the right element?
+
+release 20202.0.0.12:
+
+https://github.com/jeremytammik/ElementOutline/releases/tag/2020.0.0.12
+
+jeremytammik attached outline_solids_and_booleans.png to this card Sep 3, 2019 at 12:42 PM
+
+the intercom element is not a mesh, just a circle, represented by a full closed arc. i implemented support to include that in the boolean operation.
+
+i also implemented a utility GeoSnoop to display the loops generated in a temporary windows form.
+
+here is an image showing the Revit model (walls, bathtub, intercom) and two GeoSnoop windows. the left one shows the loops retrieved from the solids. the right one shows the loops retrieved from the 2D Booleans, including closed arcs. not the intercom and the bathtub drain.
+
+my target is to continue enhancing the 2D booleans until they include all the solid loop information, so that we can then get rid of the solid and extrusion analyser code.
+
+outline_solids_and_booleans.png
+
+maybe it is caused because you need to use LevelOfDetail=Fine?
+
+We use this code:
+
+```
+  Options opt = new Options { IncludeNonVisibleObjects = true, DetailLevel = ViewDetailLevel.Fine};
+  GeometryElement geomElem = element.get_Geometry(opt);
+```
+
+my code is on github, and the link is at the end of my previous message, release 20202.0.0.12:
+
+https://github.com/jeremytammik/ElementOutline/releases/tag/2020.0.0.12
+
+i can try again with fine detail level. however, the circle already looks very good to me. in fact, right now, i think all we need is there, in the combination of the two. and as i said, i plan to enhance the 2d boolean result to include everything returned by the solid extrusion analysis as well. so this is moving forward well.
+
+the first image was capturing data from a 2D view. capturing the 2D Booleans from a 3D view gives us all we need, I think. here is a new image with larger previews and captions added:
+
+outline_solids_and_booleans.png
+
+the enhanced version is 2020.0.0.13:
+
+https://github.com/jeremytammik/ElementOutline/releases/tag/2020.0.0.13
+
+jeremytammik attached outline_solids_and_booleans.png to this card Sep 4, 2019 at 3:52 PM
+
+Feedback: we trested a few use-cases and it seems to be working fine.
+
+Currently, the production pipeline uses an implementation in Python using Shapely to union() the triangles. 
+
+https://github.com/Toblerity/Shapely
+
+https://pypi.org/project/Shapely/
+
+Manipulation and analysis of geometric objects https://shapely.readthedocs.io/en/lat…
+
+but, it is slower, so I believe we will switch to clipper.
+
+
+##<a name="cmdroomouteroutline"></a> CmdRoomOuterOutline
+
 
 
 ## Author
