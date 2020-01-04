@@ -4,9 +4,20 @@ Revit C# .NET add-in to export 2D outlines of RVT project `Element` instances.
 
 The add-in implements three external commands:
 
-- [Command](#command)
-- [Cmd2dBoolean](#cmd2dboolean)
-- [CmdRoomOuterOutline](#cmdroomouteroutline)
+- [Command](#command) &ndash; generate element outline using `ExtrusionAnalyzer`
+- [Cmd2dBoolean](#cmd2dboolean) &ndash; generate element outline using 2D Booleans
+- [CmdRoomOuterOutline](#cmdroomouteroutline) &ndash; outer room outline using 2D Booleans
+
+All three generate element outlines of various types in varius ways.
+
+The first uses the Revit API and 
+the [`ExtrusionAnalyzer` class](https://www.revitapidocs.com/2020/ba9e3283-6868-8834-e8bf-2ea9e7358930.htm).
+
+The other two make use of
+the [Clipper integer coordinate based 2D Boolean operations library](http://angusj.com/delphi/clipper.php).
+
+The add-in also implements a bunch of utilities for converting Revit coordinates to 2D data in millimetre units and displaying the resulting element outlines in a Windows form.
+
 
 ## <a name="command"></a>Command
 
@@ -24,10 +35,11 @@ Additional requirements:
 The approach that I implemented for the room editor is actually not based on the 2D view, but on the element geometry solids in the 3D view and the result of applying
 the [`ExtrusionAnalyzer` class](https://www.revitapidocs.com/2020/ba9e3283-6868-8834-e8bf-2ea9e7358930.htm) to them,
 which is a vertical projection of the 3D element shape onto the 2D XY plane.
-This apporach is described in detail in the discussion on
-the [Extrusion Analyser and Plan View Boundaries](https://thebuildingcoder.typepad.com/blog/2013/04/extrusion-analyser-and-plan-view-boundaries.html).
+This approach is described in detail in the discussion on
+the [extrusion analyser and plan view boundaries](https://thebuildingcoder.typepad.com/blog/2013/04/extrusion-analyser-and-plan-view-boundaries.html).
 
-The [GeoSnoop .NET Boundary Curve Loop Visualisation](https://thebuildingcoder.typepad.com/blog/2013/04/geosnoop-net-boundary-curve-loop-visualisation.html) provides some example images of the resulting putlines.
+The [GeoSnoop .NET boundary curve loop visualisation](https://thebuildingcoder.typepad.com/blog/2013/04/geosnoop-net-boundary-curve-loop-visualisation.html) provides
+some example images of the resulting putlines.
 
 As you can see there, they are more detailed and exact than the standard 2D Revit representation.
 
@@ -45,6 +57,8 @@ In July 2019, I checked with the development team and asked whether they could s
 
 They responded that my `ExtrusionAnalyzer` approach seems like the best (and maybe only) way to achieve this right now.
 
+However, this approach fails for elements that do not define any solids, e.g., 2D elements represented only by curves and meshes.
+
 
 ## <a name="cmd2dboolean"></a>Cmd2dBoolean
 
@@ -52,7 +66,7 @@ I took another look at the `ExtrusionAnalyzer` approach described above to addre
 This is not a rendered view, just coordinates of a polygon around the element.
 The goal is: given an element id, retrieve a list of X,Y coordinates describing the bird-view look of an element.
 
-Here are three sample images highlighting bathtubs, doors and toilets, respectively:
+Here are three sample images highlighting the bathtubs, doors and toilets, respectively, in a given floor of a building:
 
 Bathtubs:
 
