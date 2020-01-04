@@ -8,7 +8,7 @@ The add-in implements three external commands:
 - [Cmd2dBoolean](#cmd2dboolean)
 - [CmdRoomOuterOutline](#cmdroomouteroutline)
 
-##<a name="command"></a> Command
+## <a name="command"></a>Command
 
 This code was originally implemented as part of (and just now extracted from)
 the [RoomEditorApp project](https://github.com/jeremytammik/RoomEditorApp).
@@ -46,7 +46,7 @@ In July 2019, I checked with the development team and asked whether they could s
 They responded that my `ExtrusionAnalyzer` approach seems like the best (and maybe only) way to achieve this right now.
 
 
-##<a name="cmd2dboolean"></a> Cmd2dBoolean
+## <a name="cmd2dboolean"></a>Cmd2dBoolean
 
 I took another look at the `ExtrusionAnalyzer` approach described above to address the task of generating the 2D outline of Revit elements with the aim to generate a polygon describing the visual bird-view look of an element.
 This is not a rendered view, just coordinates of a polygon around the element.
@@ -231,7 +231,7 @@ Manipulation and analysis of geometric objects https://shapely.readthedocs.io/en
 but, it is slower, so I believe we will switch to clipper.
 
 
-##<a name="cmdroomouteroutline"></a> CmdRoomOuterOutline
+## <a name="cmdroomouteroutline"></a>CmdRoomOuterOutline
 
 
 
