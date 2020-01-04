@@ -233,6 +233,46 @@ but, it is slower, so I believe we will switch to clipper.
 
 ## <a name="cmdroomouteroutline"></a>CmdRoomOuterOutline
 
+I implemented the third command `CmdRoomOuterOutline` after an unsuccesful attempt at generating the outer outline of a room including its bounding elements
+by [specifying a list of offsets to `CreateViaOffset`](https://thebuildingcoder.typepad.com/blog/2019/12/dashboards-createviaoffset-and-room-outline-algorithms.html#3).
+
+After that failed, I suggested a number of alternative approaches 
+to [determine th room outline including surrounding walls](https://thebuildingcoder.typepad.com/blog/2019/12/dashboards-createviaoffset-and-room-outline-algorithms.html#4).
+
+
+**Question:** I started to look at the possibility of tracing the outside of the walls several weeks ago, when I was at a loss utilising `CreateViaOffset`.
+
+I was finding it difficult to create the closed loop necessary, and particularly how I would achieve this were the wall thickness changes across its length.
+
+Could you point me in the right direction, possibly some sample code that I could examine and see if I could get it to work to my requirements.
+
+Hope you have a good festive season.
+
+**Answer:** I see several possible alternative approaches avoiding the use of `CreateViaOffset`, based on:
+
+- Room boundary curves and wall thicknesses
+- Room boundary curves and wall bottom face edges
+- Projection of 3D union of room and wall solids
+- 2D union of room and wall footprints
+
+The most immediate and pure Revit API approach would be to get the curves representing the room boundaries, determine the wall thicknesses, offset the wall boundary curves outwards by wall thickness plus minimum offset, and ensure that everything is well connected by adding small connecting segments in the gaps where the offset jumps.
+
+Several slightly more complex pure Revit API approaches could be designed by using the wall solids instead of just offsetting the room boundary curves based on the wall thickness. For instance, we could query the wall bottom face for its edges, determine and patch together all the bits of edge segments required to go around the outside of the wall instead of the inside.
+
+Slightly more complex still, and still pure Revit API: determine the room closed shell solid, unite it with all the wall solids, and make use of the extrusion analyser to project this union vertically onto the XY plane and grab its outside edge.
+
+Finally, making use of a minimalistic yet powerful 2D Boolean operation library, perform the projection onto the XY plane first, and unite the room footprint with all its surrounding wall footprints in 2D instead. Note that the 2D Booleans are integer based. To make use of those, I convert the geometry from imperial feet units using real numbers to integer-based millimetres.
+
+The two latter approaches are both implemented in
+my [ElementOutline add-in](https://github.com/jeremytammik/ElementOutline).
+
+I mentioned it here in two previous threads:
+
+- [Question regarding SVG data](https://forums.autodesk.com/t5/revit-api-forum/question-regarding-svg-data-from-revit/m-p/9106146)
+- [How do I get the outline and stakeout path of a built-in loft family](https://forums.autodesk.com/t5/revit-api-forum/how-do-i-get-the-outline-and-stakeout-path-of-a-built-in-loft/m-p/9148138)
+
+Probably all the pure Revit API approaches will run into various problematic exceptional cases, whereas the 2D Booleans seem very fast, reliable and robust and may well be able to handle all the exceptional cases that can possibly occur, so I would recommend trying that out first.
+
 
 
 ## Author
