@@ -33,7 +33,7 @@ There is no need for a rendered view, just coordinates defining a 2D polygon aro
 
 The goal is: given an element id, retrieve a list of X,Y coordinates describing the birds-eye view look of an element.
 
-For inbsance, here are three sample images highlighting the bathtubs, doors and toilets, respectively, in a given floor of a building:
+For instance, here are three sample images highlighting the bathtubs, doors and toilets, respectively, in a given floor of a building:
 
 Bathtubs:
 
