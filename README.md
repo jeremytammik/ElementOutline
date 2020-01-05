@@ -237,7 +237,6 @@ by [specifying a list of offsets to `CreateViaOffset`](https://thebuildingcoder.
 After that failed, I suggested a number of alternative approaches 
 to [determine th room outline including surrounding walls](https://thebuildingcoder.typepad.com/blog/2019/12/dashboards-createviaoffset-and-room-outline-algorithms.html#4).
 
-
 **Question:** I started to look at the possibility of tracing the outside of the walls several weeks ago, when I was at a loss utilising `CreateViaOffset`.
 
 I was finding it difficult to create the closed loop necessary, and particularly how I would achieve this were the wall thickness changes across its length.
@@ -269,6 +268,17 @@ I mentioned it here in two previous threads:
 
 Probably all the pure Revit API approaches will run into various problematic exceptional cases, whereas the 2D Booleans seem fast, reliable and robust and may well be able to handle all the exceptional cases that can possibly occur, so I would recommend trying that out first.
 
+I ended up implementing my suggestion in the new external command `CmdRoomOuterOutline`.
+
+It makes use of the 2D Boolean outline generation functionality implemented for Cmd2dBoolean, adding code to generate a polygon for the room boundary and unite it wityh all the bounding elements.
+
+It successfully handles the wall width sample model:
+
+<img src="img/wall_width_loop_using_2d_booleans.png" alt="Wall width sample loop" title="Wall width sample loop" width="300"/>
+
+It also gracefully handles the room separator situation:
+
+<img src="img/room_separator_using_2d_booleans.png" alt="Room separator sample loop" title="Room separator sample loop" width="300"/>
 
 
 ## Author
