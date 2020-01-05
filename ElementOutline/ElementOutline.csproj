@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
+    <Compile Include="ClipperRvt.cs" />
     <Compile Include="Cmd2dBoolean.cs" />
     <Compile Include="CmdRoomOuterOutline.cs" />
     <Compile Include="CmdUploadRooms.cs" />

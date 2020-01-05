@@ -59,6 +59,22 @@ namespace ElementOutline
         s.Close();
       }
     }
+
+    public static void CreateOutput(
+      string file_content,
+      string description,
+      Document doc,
+      JtWindowHandle hwnd,
+      Dictionary<int, JtLoops> booleanLoops )
+    {
+      string filepath = Path.Combine( Util.OutputFolderPath,
+         doc.Title + "_" + file_content + ".json" );
+
+      string caption = doc.Title + " " + description;
+
+      ExportLoops( filepath, hwnd, caption,
+        doc, booleanLoops );
+    }
     #endregion // Output folder and export
 
     #region Element pre- or post-selection

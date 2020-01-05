@@ -52,7 +52,7 @@ namespace ElementOutline
         Room room = doc.GetElement( id ) as Room;
 
         JtLoops loops
-          = Cmd2dBoolean.GetRoomOuterBoundaryLoops(
+          = ClipperRvt.GetRoomOuterBoundaryLoops(
             room, seb_opt, view );
 
         if( null == loops ) // the room may not be bounded
@@ -65,7 +65,7 @@ namespace ElementOutline
       JtWindowHandle hwnd = new JtWindowHandle(
         uiapp.MainWindowHandle );
 
-      Cmd2dBoolean.CreateOutput( "room_outer_outline",
+      Util.CreateOutput( "room_outer_outline",
         "Room Outer Outline", doc, hwnd, booleanLoops );
 
       return Result.Succeeded;
