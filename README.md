@@ -4,7 +4,7 @@ Revit C# .NET add-in to export 2D outlines of RVT project `Element` instances.
 
 The add-in implements three external commands:
 
-- [Command](#command) &ndash; generate element outline using `ExtrusionAnalyzer`
+- [CmdExtrusionAnalyzer](#cmdextrusionanalyzer) &ndash; generate element outline using `ExtrusionAnalyzer`
 - [Cmd2dBoolean](#cmd2dboolean) &ndash; generate element outline using 2D Booleans
 - [CmdRoomOuterOutline](#cmdroomouteroutline) &ndash; outer room outline using 2D Booleans
 
@@ -19,7 +19,7 @@ the [Clipper integer coordinate based 2D Boolean operations library](http://angu
 The add-in also implements a bunch of utilities for converting Revit coordinates to 2D data in millimetre units and displaying the resulting element outlines in a Windows form.
 
 
-## <a name="command"></a>Command
+## <a name="cmdextrusionanalyzer"></a>CmdExtrusionAnalyzer
 
 This code was originally implemented as part of (and just now extracted from)
 the [RoomEditorApp project](https://github.com/jeremytammik/RoomEditorApp).
