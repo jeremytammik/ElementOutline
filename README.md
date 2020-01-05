@@ -2,6 +2,16 @@
 
 Revit C# .NET add-in to export 2D outlines of RVT project `Element` instances.
 
+Table of contents:
+
+- [Task &ndash; 2D Polygon Representing Birds-Eye View of an Element](#1)
+- [CmdExtrusionAnalyzer](#2)
+- [Alternative Approaches to Determine 2D Element Outline](#3)
+- [Cmd2dBoolean](#4)
+- [CmdRoomOuterOutline](#5)
+- [Author](#6)
+- [License](#7)
+
 The add-in implements three external commands:
 
 - [CmdExtrusionAnalyzer](#cmdextrusionanalyzer) &ndash; generate element outline using `ExtrusionAnalyzer`
@@ -161,7 +171,6 @@ Thast seems to return robust results.
 
 I completed a new poly2d implementation using 2D Booleans instead of the solids and extrusion analyser.
 I expect it is significantly faster.
-Have not benchmarked, yet, however.
 
 The ElementOutline release 2020.0.0.10 exportes outlines from both solids and 2d booleans and generates identical results for both, so that is a good sign.
 
