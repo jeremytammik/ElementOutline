@@ -47,7 +47,7 @@ Toilets:
 
 <img src="img/birdseye_view_toilets.png" alt="Toilets" title="Toilets" width="300"/>
 
-In end effect, we generater a discionary mapping an element id or unique id to a list of space delimited pairs of X Y vertex coordinates in millimetres.
+In end effect, we generate a dictionary mapping an element id or unique id to a list of space delimited pairs of X Y vertex coordinates in millimetres.
 
 
 ## <a name="cmdextrusionanalyzer"></a>CmdExtrusionAnalyzer
