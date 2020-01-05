@@ -75,6 +75,7 @@ using System.Runtime.InteropServices;
 // 2020-01-01 2020.0.1.2 skip room separator in GetRoomOuterBoundaryLoop
 // 2020-01-01 2020.0.1.2 successfully tested on both wall width and room separator sample models
 // 2020-01-05 2020.0.1.3 refactored and implemented ClipperRvt utility class
+// 2020-01-05 2020.0.1.3 renamed CmdExtrusionAnalyzer
 //
 [assembly: AssemblyVersion( "2020.0.1.3" )]
 [assembly: AssemblyFileVersion( "2020.0.1.3" )]
