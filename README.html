@@ -22,7 +22,7 @@ the <a href="http://angusj.com/delphi/clipper.php">Clipper integer coordinate ba
 </ul>
 <p>There is no need for a rendered view, just coordinates defining a 2D polygon around the element.</p>
 <p>The goal is: given an element id, retrieve a list of X,Y coordinates describing the birds-eye view look of an element.</p>
-<p>For inbsance, here are three sample images highlighting the bathtubs, doors and toilets, respectively, in a given floor of a building:</p>
+<p>For instance, here are three sample images highlighting the bathtubs, doors and toilets, respectively, in a given floor of a building:</p>
 <p>Bathtubs:</p>
 <p><img src="img/birdseye_view_bathtubs.png" alt="Bathtubs" title="Bathtubs" width="300"/></p>
 <p>Doors:</p>
@@ -48,7 +48,7 @@ some example images of the resulting putlines.</p>
 <p>E.g., for the desk, you notice the little bulges for the desk drawer handles sticking out a little bit beyond the desktop surface.</p>
 <p>For the chair, the arm rests are missing, because the solids used to model them do not make it through the extruson analyser, or maybe because the code ignores multiple disjust loops.</p>
 <p>Here is an sample model with four elements highlighted in blue:</p>
-<p><img src="img/element_outline_four_selected.png" alt="Four elements selected" title="Four elements selected" width="300"/></p>
+<p><img src="img/element_outline_four_selected_extrusion_analyser_svg_path.png" alt="Four elements selected" title="Four elements selected" width="300"/></p>
 <p>For them, the CmdExtrusionAnalyzer command generates the following JSON file defeining their outline polygon in SVG format:</p>
 <p><code>{"name":"pt2+20+7", "id":"576786", "uid":"bc43ed2e-7e23-4f0e-9588-ab3c43f3d388-0008cd12", "svg_path":"M-56862 -9150 L-56572 -9150 -56572 -14186 -56862 -14186Z"}
 {"name":"pt70/210", "id":"576925", "uid":"bc43ed2e-7e23-4f0e-9588-ab3c43f3d388-0008cd9d", "svg_path":"M-55672 -11390 L-55672 -11290 -55656 -11290 -55656 -11278 -55087 -11278 -55087 -11270 -55076 -11270 -55076 -11242 -55182 -11242 -55182 -11214 -55048 -11214 -55048 -11270 -55037 -11270 -55037 -11278 -54988 -11278 -54988 -11290 -54972 -11290 -54972 -11390Z"}

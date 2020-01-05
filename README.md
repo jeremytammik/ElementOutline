@@ -80,7 +80,7 @@ For the chair, the arm rests are missing, because the solids used to model them 
 
 Here is an sample model with four elements highlighted in blue:
 
-<img src="img/element_outline_four_selected.png" alt="Four elements selected" title="Four elements selected" width="300"/>
+<img src="img/element_outline_four_selected_extrusion_analyser_svg_path.png" alt="Four elements selected" title="Four elements selected" width="300"/>
 
 For them, the CmdExtrusionAnalyzer command generates the following JSON file defeining their outline polygon in SVG format:
 
