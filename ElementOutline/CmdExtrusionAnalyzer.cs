@@ -14,7 +14,7 @@ using System.IO;
 namespace ElementOutline
 {
   [Transaction( TransactionMode.ReadOnly )]
-  public class Command : IExternalCommand
+  public class CmdExtrusionAnalyzer : IExternalCommand
   {
     /// <summary>
     /// Retrieve plan view boundary loops from element 

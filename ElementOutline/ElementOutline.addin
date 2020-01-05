@@ -4,7 +4,7 @@
     <Text>Element Outline Solid</Text>
     <Description>Determine element outline from geometry solids and ExtrusionAnalyzer</Description>
     <Assembly>ElementOutline.dll</Assembly>
-    <FullClassName>ElementOutline.Command</FullClassName>
+    <FullClassName>ElementOutline.CmdExtrusionAnalyzer</FullClassName>
     <ClientId>cc311594-d26d-4f64-9dc7-71c43d27fbf6</ClientId>
     <VendorId>com.typepad.thebuildingcoder</VendorId>
     <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>

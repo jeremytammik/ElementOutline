@@ -68,7 +68,7 @@
     <Compile Include="Cmd2dBoolean.cs" />
     <Compile Include="CmdRoomOuterOutline.cs" />
     <Compile Include="CmdUploadRooms.cs" />
-    <Compile Include="Command.cs" />
+    <Compile Include="CmdExtrusionAnalyzer.cs" />
     <Compile Include="ContiguousCurveSorter.cs" />
     <Compile Include="ElementEqualityComparer.cs" />
     <Compile Include="GeoSnoop.cs" />
