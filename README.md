@@ -274,11 +274,11 @@ It makes use of the 2D Boolean outline generation functionality implemented for 
 
 It successfully handles the wall width sample model:
 
-<img src="img/wall_width_loop_using_2d_booleans.png" alt="Wall width sample loop" title="Wall width sample loop" width="300"/>
+<img src="img/wall_width_loop_using_2d_booleans.png" alt="Wall width sample loop" title="Wall width sample loop" width="500"/>
 
 It also gracefully handles the room separator situation:
 
-<img src="img/room_separator_using_2d_booleans.png" alt="Room separator sample loop" title="Room separator sample loop" width="300"/>
+<img src="img/room_separator_using_2d_booleans.png" alt="Room separator sample loop" title="Room separator sample loop" width="500"/>
 
 
 ## Author
