@@ -144,9 +144,9 @@ Concave hull:
 - Joining unordered line segments &ndash; https://stackoverflow.com/questions/1436091/joining-unordered-line-segments
 - join all line segments into closed polygons
 - union all the polygons using clipper
-- List<IntPoint2d> vertices;
-- List<Pair<int,int>> segments;
-- Dictionary<IntPoint2d,int> map_end_point_to_segments_both_directions;
+- List&lt;IntPoint2d&gt; vertices;
+- List&lt;Pair&lt;int,int&gt;&gt; segments;
+- Dictionary&lt;IntPoint2d,int&gt; map_end_point_to_segments_both_directions;
 - http://www3.cs.stonybrook.edu/~algorith/implement/sweep/implement.shtml
 - https://github.com/mikhaildubov/Computational-geometry/blob/master/2)%20Any%20segments%20intersection/src/ru/dubov/anysegmentsintersect/SegmentsIntersect.java
 - https://github.com/jeremytammik/wykobi/blob/master/wykobi_naive_group_intersections.inl
