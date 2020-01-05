@@ -186,7 +186,7 @@ I also implemented a utility `GeoSnoop` to display the loops generated in a temp
 
 Here is an image showing part of a sample Revit model in the middle including a wall, bathtub and intercom element and two GeoSnoop windows:
 
-<img src="img/geosnoop_solids_versus_booleans.png" alt="GeoSnoop outlines generated from solids versus 2D Booleans" title="GeoSnoop outlines generated from solids versus 2D Booleans" width="600"/>
+<img src="img/geosnoop_solids_versus_booleans.png" alt="GeoSnoop outlines generated from solids versus 2D Booleans" title="GeoSnoop outlines generated from solids versus 2D Booleans" width="800"/>
 
 The left GeoSnoop window shows the outline loops retrieved from the solids using the extrusion analyser.
 The right one shows the loops retrieved from the 2D Booleans, including closed arcs.
