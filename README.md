@@ -19,10 +19,7 @@ the [Clipper integer coordinate based 2D Boolean operations library](http://angu
 The add-in also implements a bunch of utilities for converting Revit coordinates to 2D data in millimetre units and displaying the resulting element outlines in a Windows form.
 
 
-## <a name="cmdextrusionanalyzer"></a>CmdExtrusionAnalyzer
-
-This code was originally implemented as part of (and just now extracted from)
-the [RoomEditorApp project](https://github.com/jeremytammik/RoomEditorApp).
+## <a name="task"></a>Task &ndash; 2D Polygon Representing Birds-Eye View of an Element
 
 The goal is to export the 2D outlines of Revit `Element` instances, i.e., for each element, associate its element id or unique id with the list of X,Y coordinates describing a polygon representing the visual birds-eye view look of its outline.
 
@@ -32,41 +29,11 @@ Additional requirements:
 - Generate a separate outline in place for each element, directly in its appropriate location and orientation.
 - Output the result in a simple text file.
 
-The approach that I implemented for the room editor is actually not based on the 2D view, but on the element geometry solids in the 3D view and the result of applying
-the [`ExtrusionAnalyzer` class](https://www.revitapidocs.com/2020/ba9e3283-6868-8834-e8bf-2ea9e7358930.htm) to them,
-which is a vertical projection of the 3D element shape onto the 2D XY plane.
-This approach is described in detail in the discussion on
-the [extrusion analyser and plan view boundaries](https://thebuildingcoder.typepad.com/blog/2013/04/extrusion-analyser-and-plan-view-boundaries.html).
+There is no need for a rendered view, just coordinates defining a 2D polygon around the element.
 
-The [GeoSnoop .NET boundary curve loop visualisation](https://thebuildingcoder.typepad.com/blog/2013/04/geosnoop-net-boundary-curve-loop-visualisation.html) provides
-some example images of the resulting putlines.
+The goal is: given an element id, retrieve a list of X,Y coordinates describing the birds-eye view look of an element.
 
-As you can see there, they are more detailed and exact than the standard 2D Revit representation.
-
-The standard plan view of the default desk and chair components look like this in Revit:
-
-<img src="img/desk_and_chair_plan.png" alt="Plan view of desk and chair in Revit" title="Plan view of desk and chair in Revit" width="318"/>
-
-The loops exported by the RoomEditorApp add-in for the same desk and chair look like this instead:
-
-<img src="img/desk_and_chair_loops.png" alt="Desk and chair loops in GeoSnoop" title="Desk and chair loops in GeoSnoop" width="318"/>
-
-E.g., for the desk, you notice the little bulges for the desk drawer handles sticking out a little bit beyond the desktop surface, whereas, for the chair, the arm rests are missing.
-
-In July 2019, I checked with the development team and asked whether they could suggest a better way to retrieve the 2D outline of an element.
-
-They responded that my `ExtrusionAnalyzer` approach seems like the best (and maybe only) way to achieve this right now.
-
-However, this approach fails for elements that do not define any solids, e.g., 2D elements represented only by curves and meshes.
-
-
-## <a name="cmd2dboolean"></a>Cmd2dBoolean
-
-I took another look at the `ExtrusionAnalyzer` approach described above to address the task of generating the 2D outline of Revit elements with the aim to generate a polygon describing the visual bird-view look of an element.
-This is not a rendered view, just coordinates of a polygon around the element.
-The goal is: given an element id, retrieve a list of X,Y coordinates describing the bird-view look of an element.
-
-Here are three sample images highlighting the bathtubs, doors and toilets, respectively, in a given floor of a building:
+For inbsance, here are three sample images highlighting the bathtubs, doors and toilets, respectively, in a given floor of a building:
 
 Bathtubs:
 
@@ -80,34 +47,42 @@ Toilets:
 
 <img src="img/birdseye_view_toilets.png" alt="Toilets" title="Toilets" width="300"/>
 
-element id, unique id, list of space delimited pairs of X Y vertex coordinates in millimetres
+In end effect, we generater a discionary mapping an element id or unique id to a list of space delimited pairs of X Y vertex coordinates in millimetres.
 
-2019-07-09 ElementPolygon prototype -- Implemented ElementPolygon, folder renamed to ElmtPoly
 
-2019-07-23 Implemented ElementOutline
-unchanged code extracted from RoomEditorApp https://github.com/jeremytammik/ElementOutline/releases/tag/2020.0.0.0
-modified for buildots https://github.com/jeremytammik/ElementOutline/releases/tag/2020.0.0.1
-exports outlines to json https://github.com/jeremytammik/ElementOutline/releases/tag/2020.0.0.2
+## <a name="cmdextrusionanalyzer"></a>CmdExtrusionAnalyzer
 
-element_outline_four_selected.png
-__pt_build_b_2020_element_outline.json
+This code was originally implemented as part of (and later extracted from)
+the [RoomEditorApp project](https://github.com/jeremytammik/RoomEditorApp).
 
-Date: Wednesday July24 2019 at 07:59
-Subject: Generating 2D map of elements
+The approach implemented for the room editor is not based on the 2D view, but on the element geometry solids in the 3D view and the result of applying
+the [`ExtrusionAnalyzer` class](https://www.revitapidocs.com/2020/ba9e3283-6868-8834-e8bf-2ea9e7358930.htm) to them,
+creating a vertical projection of the 3D element shape onto the 2D XY plane.
+This approach is described in detail in the discussion on
+the [extrusion analyser and plan view boundaries](https://thebuildingcoder.typepad.com/blog/2013/04/extrusion-analyser-and-plan-view-boundaries.html).
 
-i completed a first stab at generating and exporting the 2D element outlines using the extrusion analyser:
+The [GeoSnoop .NET boundary curve loop visualisation](https://thebuildingcoder.typepad.com/blog/2013/04/geosnoop-net-boundary-curve-loop-visualisation.html) provides
+some example images of the resulting putlines.
 
-https://github.com/jeremytammik/ElementOutline
+As you can see there, the outline generated is more precise and detailed than the standard 2D Revit representation.
 
-the repository readme includes the specification of what we wish to achieve, as far as i am aware.
+The standard plan view of the default desk and chair components look like this in Revit:
 
-plese check that and add whatever may be missing.
+<img src="img/desk_and_chair_plan.png" alt="Plan view of desk and chair in Revit" title="Plan view of desk and chair in Revit" width="318"/>
 
-here is an example of selecting four elements in your sample model, highlighted in blue:
+The loops exported by the RoomEditorApp add-in for the same desk and chair look like this instead:
 
-/a/special/buildots/task_2d_element_map/element_outline_four_selected.png
+<img src="img/desk_and_chair_loops.png" alt="Desk and chair loops in GeoSnoop" title="Desk and chair loops in GeoSnoop" width="318"/>
 
-that generates the following JSON file including their outline in SVG format:
+E.g., for the desk, you notice the little bulges for the desk drawer handles sticking out a little bit beyond the desktop surface.
+
+For the chair, the arm rests are missing, because the solids used to model them do not make it through the extruson analyser, or maybe because the code ignores multiple disjust loops.
+
+Here is an sample model with four elements highlighted in blue:
+
+<img src="img/element_outline_four_selected.png" alt="Four elements selected" title="Four elements selected" width="300"/>
+
+For them, the CmdExtrusionAnalyzer command generates the following JSON file defeining their outline polygon in SVG format:
 
 ```
 {"name":"pt2+20+7", "id":"576786", "uid":"bc43ed2e-7e23-4f0e-9588-ab3c43f3d388-0008cd12", "svg_path":"M-56862 -9150 L-56572 -9150 -56572 -14186 -56862 -14186Z"}
@@ -116,15 +91,24 @@ that generates the following JSON file including their outline in SVG format:
 {"name":"מנוע מזגן מפוצל", "id":"576972", "uid":"bc43ed2e-7e23-4f0e-9588-ab3c43f3d388-0008cdcc", "svg_path":"M-56753 -8031 L-56713 -8031 -56713 -8018 -56276 -8018 -56276 -8031 -56265 -8031 -56265 -8109 -56276 -8109 -56276 -8911 -56252 -8911 -56252 -8989 -56276 -8989 -56276 -9020 -56277 -9020 -56278 -9020 -56711 -9020 -56713 -9020 -56713 -8989 -56753 -8989 -56753 -8911 -56713 -8911 -56713 -8109 -56753 -8109Z"}
 ```
 
-both files are attached to this message.
+`M`, `L` and `Z` stand for `moveto`, `lineto` and `close`, respectively. Repetitions of `L` can be omitted. Nice and succinct.
 
-i hope this satisfies the requirements.
+However, the extrusion analyzer approach abviously fails for all elements that do not define any solids, e.g., 2D elements represented only by curves and meshes.
 
-the advantage of the SVG path instead of just raw coordinates is that multiple loops can be easily specified.
+Hence the continued research to find an alternative approach and the implementation of `Cmd2dBoolean` dewscribed below making use of the Clipper library and 2D Booleans instead.
 
-M, L and Z stand for moveto, lineto and close, respectively. repetitions of L can be omitted. nice and succinct.
+In July 2019, I checked with the development team and asked whether they could suggest a better way to retrieve the 2D outline of an element.
 
-next, i assume you would nee to define exactly which elements you want to export, so that the manaul selection can be replaced by a automatic one.
+They responded that my `ExtrusionAnalyzer` approach seems like the best (and maybe only) way to achieve this right now.
+
+Considering Cmd2dBoolean, I might add the caveat 'using the Revit API' to the last statement.
+
+
+## <a name="cmd2dboolean"></a>Cmd2dBoolean
+
+The `ExtrusionAnalyzer` approach based on element solids does not successfully address the task of generating the 2D birds-eye view outline for all Revit elements.
+
+
 
 concave hull: 
 
