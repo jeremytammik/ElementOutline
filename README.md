@@ -180,7 +180,7 @@ What is missing besided meshes and solids?
 
 I now tested successfully on an intercom element.
 It is not a mesh, just a circle, represented by a full closed arc.
-I implemented support to include that in the boolean operation.
+I implemented support to include that as well in the Boolean operation.
 
 I also implemented a utility `GeoSnoop` to display the loops generated in a temporary Windows form.
 
