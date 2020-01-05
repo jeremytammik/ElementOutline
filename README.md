@@ -14,9 +14,9 @@ Table of contents:
 
 The add-in implements three external commands:
 
-- [CmdExtrusionAnalyzer](#cmdextrusionanalyzer) &ndash; generate element outline using `ExtrusionAnalyzer`
-- [Cmd2dBoolean](#cmd2dboolean) &ndash; generate element outline using 2D Booleans
-- [CmdRoomOuterOutline](#cmdroomouteroutline) &ndash; outer room outline using 2D Booleans
+- [CmdExtrusionAnalyzer](#2) &ndash; generate element outline using `ExtrusionAnalyzer`
+- [Cmd2dBoolean](#4) &ndash; generate element outline using 2D Booleans
+- [CmdRoomOuterOutline](#5) &ndash; outer room outline using 2D Booleans
 
 All three generate element outlines of various types in varius ways.
 
@@ -29,7 +29,7 @@ the [Clipper integer coordinate based 2D Boolean operations library](http://angu
 The add-in also implements a bunch of utilities for converting Revit coordinates to 2D data in millimetre units and displaying the resulting element outlines in a Windows form.
 
 
-## <a name="task"></a>Task &ndash; 2D Polygon Representing Birds-Eye View of an Element
+## <a name="1"></a>Task &ndash; 2D Polygon Representing Birds-Eye View of an Element
 
 The goal is to export the 2D outlines of Revit `Element` instances, i.e., for each element, associate its element id or unique id with the list of X,Y coordinates describing a polygon representing the visual birds-eye view look of its outline.
 
@@ -60,7 +60,7 @@ Toilets:
 In end effect, we generate a dictionary mapping an element id or unique id to a list of space delimited pairs of X Y vertex coordinates in millimetres.
 
 
-## <a name="cmdextrusionanalyzer"></a>CmdExtrusionAnalyzer
+## <a name="2"></a>CmdExtrusionAnalyzer
 
 This code was originally implemented as part of (and later extracted from)
 the [RoomEditorApp project](https://github.com/jeremytammik/RoomEditorApp).
@@ -114,7 +114,7 @@ They responded that my `ExtrusionAnalyzer` approach seems like the best (and may
 Considering Cmd2dBoolean, I might add the caveat 'using the Revit API' to the last statement.
 
 
-## <a name="cmd2dboolean"></a>Alternative Approaches to Determine 2D Element Outline
+## <a name="3"></a>Alternative Approaches to Determine 2D Element Outline
 
 The `ExtrusionAnalyzer` approach based on element solids does not successfully address the task of generating the 2D birds-eye view outline for all Revit elements.
 
@@ -167,7 +167,7 @@ I had another idea for a much simpler approach using 2D Boolean operations, unit
 Thast seems to return robust results.
 
 
-## <a name="cmd2dboolean"></a>Cmd2dBoolean
+## <a name="4"></a>Cmd2dBoolean
 
 I completed a new poly2d implementation using 2D Booleans instead of the solids and extrusion analyser.
 I expect it is significantly faster.
@@ -229,7 +229,7 @@ Manipulation and analysis of geometric objects https://shapely.readthedocs.io/en
 But, it is slower, so I believe we will switch to Clipper.
 
 
-## <a name="cmdroomouteroutline"></a>CmdRoomOuterOutline
+## <a name="5"></a>CmdRoomOuterOutline
 
 I implemented the third command `CmdRoomOuterOutline` after an unsuccesful attempt at generating the outer outline of a room including its bounding elements
 by [specifying a list of offsets to `CreateViaOffset`](https://thebuildingcoder.typepad.com/blog/2019/12/dashboards-createviaoffset-and-room-outline-algorithms.html#3).
@@ -281,12 +281,12 @@ It also gracefully handles the room separator situation:
 <img src="img/room_separator_using_2d_booleans.png" alt="Room separator sample loop" title="Room separator sample loop" width="500"/>
 
 
-## Author
+## <a name="6"></a>Author
 
 Jeremy Tammik, [The Building Coder](http://thebuildingcoder.typepad.com), [ADN](http://www.autodesk.com/adn) [Open](http://www.autodesk.com/adnopen), [Autodesk Inc.](http://www.autodesk.com)
 
 
-## License
+## <a name="7"></a>License
 
 This sample is licensed under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 Please see the [LICENSE](LICENSE) file for full details.
