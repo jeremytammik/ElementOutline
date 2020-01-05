@@ -172,7 +172,7 @@ Thast seems to return robust results.
 I completed a new poly2d implementation using 2D Booleans instead of the solids and extrusion analyser.
 I expect it is significantly faster.
 
-The ElementOutline release 2020.0.0.10 exportes outlines from both solids and 2d booleans and generates identical results for both, so that is a good sign.
+The ElementOutline release 2020.0.0.10 exports outlines from both solids and 2D Booleans and generates identical results for both, so that is a good sign.
 
 Maybe meshes and solids cover all requirements.
 I am still experimenting and testing.
