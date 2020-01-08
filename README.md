@@ -103,9 +103,9 @@ For them, the CmdExtrusionAnalyzer command generates the following JSON file def
 
 `M`, `L` and `Z` stand for `moveto`, `lineto` and `close`, respectively. Repetitions of `L` can be omitted. Nice and succinct.
 
-However, the extrusion analyzer approach abviously fails for all elements that do not define any solids, e.g., 2D elements represented only by curves and meshes.
+However, the extrusion analyser approach obviously fails for all elements that do not define any solids, e.g., 2D elements represented only by curves and meshes.
 
-Hence the continued research to find an alternative approach and the implementation of `Cmd2dBoolean` dewscribed below making use of the Clipper library and 2D Booleans instead.
+Hence the continued research to find an alternative approach and the implementation of `Cmd2dBoolean` described below making use of the Clipper library and 2D Booleans instead.
 
 In July 2019, I checked with the development team and asked whether they could suggest a better way to retrieve the 2D outline of an element.
 
