@@ -88,7 +88,7 @@ E.g., for the desk, you notice the little bulges for the desk drawer handles sti
 
 For the chair, the arm rests are missing, because the solids used to model them do not make it through the extruson analyser, or maybe because the code ignores multiple disjunct loops.
 
-Here is an sample model with four elements highlighted in blue:
+Here is a sample model with four elements highlighted in blue:
 
 <img src="img/element_outline_four_selected_extrusion_analyser_svg_path.png" alt="Four elements selected" title="Four elements selected" width="300"/>
 
