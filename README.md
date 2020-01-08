@@ -148,7 +148,7 @@ Alpha shape:
 - https://pypi.org/project/alphashape/
 - https://alphashape.readthedocs.io/
 
-I determined that some elements have no solids, just meshes, hence the extrusion anayser approach cannot be used.
+I determined that some elements have no solids, just meshes, hence the extrusion analyser approach cannot be used.
 
 Looked at the [alpha shape implementation here](https://pypi.org/project/alphashape).
 
