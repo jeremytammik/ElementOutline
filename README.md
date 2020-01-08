@@ -268,12 +268,12 @@ It also gracefully handles the room separator situation:
 <img src="img/room_separator_using_2d_booleans.png" alt="Room separator sample loop" title="Room separator sample loop" width="500"/>
 
 
-## <a name="6"></a>Author
+## <a name="7"></a>Author
 
 Jeremy Tammik, [The Building Coder](http://thebuildingcoder.typepad.com), [ADN](http://www.autodesk.com/adn) [Open](http://www.autodesk.com/adnopen), [Autodesk Inc.](http://www.autodesk.com)
 
 
-## <a name="7"></a>License
+## <a name="8"></a>License
 
 This sample is licensed under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 Please see the [LICENSE](LICENSE) file for full details.
