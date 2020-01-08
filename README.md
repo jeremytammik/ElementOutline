@@ -72,7 +72,7 @@ This approach is described in detail in the discussion on
 the [extrusion analyser and plan view boundaries](https://thebuildingcoder.typepad.com/blog/2013/04/extrusion-analyser-and-plan-view-boundaries.html).
 
 The [GeoSnoop .NET boundary curve loop visualisation](https://thebuildingcoder.typepad.com/blog/2013/04/geosnoop-net-boundary-curve-loop-visualisation.html) provides
-some example images of the resulting putlines.
+some example images of the resulting outlines.
 
 As you can see there, the outline generated is more precise and detailed than the standard 2D Revit representation.
 
@@ -86,7 +86,7 @@ The loops exported by the RoomEditorApp add-in for the same desk and chair look 
 
 E.g., for the desk, you notice the little bulges for the desk drawer handles sticking out a little bit beyond the desktop surface.
 
-For the chair, the arm rests are missing, because the solids used to model them do not make it through the extruson analyser, or maybe because the code ignores multiple disjust loops.
+For the chair, the arm rests are missing, because the solids used to model them do not make it through the extruson analyser, or maybe because the code ignores multiple disjunct loops.
 
 Here is an sample model with four elements highlighted in blue:
 
