@@ -218,11 +218,11 @@ Since it is slower, it would be better to switch to Clipper.
 
 ## <a name="6"></a>CmdRoomOuterOutline
 
-I implemented the third command `CmdRoomOuterOutline` after an unsuccesful attempt at generating the outer outline of a room including its bounding elements
+I implemented the third command `CmdRoomOuterOutline` after an unsuccessful attempt at generating the outer outline of a room including its bounding elements
 by [specifying a list of offsets to `CreateViaOffset`](https://thebuildingcoder.typepad.com/blog/2019/12/dashboards-createviaoffset-and-room-outline-algorithms.html#3).
 
 After that failure, I suggested a number of alternative approaches 
-to [determine th room outline including surrounding walls](https://thebuildingcoder.typepad.com/blog/2019/12/dashboards-createviaoffset-and-room-outline-algorithms.html#4).
+to [determine the room outline including surrounding walls](https://thebuildingcoder.typepad.com/blog/2019/12/dashboards-createviaoffset-and-room-outline-algorithms.html#4).
 
 **Question:** I started to look at the possibility of tracing the outside of the walls several weeks ago, when I was at a loss utilising `CreateViaOffset`.
 
@@ -257,7 +257,7 @@ Probably all the pure Revit API approaches will run into various problematic exc
 
 I ended up implementing my suggestion in the new external command `CmdRoomOuterOutline`.
 
-It makes use of the 2D Boolean outline generation functionality implemented for Cmd2dBoolean, adding code to generate a polygon for the room boundary and unite it wityh all the bounding elements.
+It makes use of the 2D Boolean outline generation functionality implemented for Cmd2dBoolean, adding code to generate a polygon for the room boundary and unite it with all the bounding elements.
 
 It successfully handles the wall width sample model:
 
