@@ -159,7 +159,7 @@ I had another idea for a much simpler approach using 2D Boolean operations, unit
 - Join all line segments into closed polygons
 - Union all the polygons using Clipper
 
-Thast seems to return robust results.
+That seems to return robust results.
 
 
 ## <a name="5"></a>Cmd2dBoolean
@@ -171,7 +171,7 @@ The ElementOutline release 2020.0.0.10 exports outlines from both solids and 2D 
 
 Maybe meshes and solids cover all requirements.
 I am still experimenting and testing.
-What is missing besided meshes and solids?
+What is missing besides meshes and solids?
 
 I tested successfully on an intercom element.
 It is not a mesh, just a circle, represented by a full closed arc.
