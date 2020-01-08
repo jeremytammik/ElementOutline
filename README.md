@@ -92,7 +92,7 @@ Here is a sample model with four elements highlighted in blue:
 
 <img src="img/element_outline_four_selected_extrusion_analyser_svg_path.png" alt="Four elements selected" title="Four elements selected" width="300"/>
 
-For them, the CmdExtrusionAnalyzer command generates the following JSON file defeining their outline polygon in SVG format:
+For them, the CmdExtrusionAnalyzer command generates the following JSON file defining their outline polygon in SVG format:
 
 <pre>
 {"name":"pt2+20+7", "id":"576786", "uid":"bc43ed2e-7e23-4f0e-9588-ab3c43f3d388-0008cd12", "svg_path":"M-56862 -9150 L-56572 -9150 -56572 -14186 -56862 -14186Z"}
