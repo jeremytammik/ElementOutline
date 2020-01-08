@@ -4,21 +4,21 @@ Revit C# .NET add-in to export 2D outlines of RVT project `Element` instances.
 
 Table of contents:
 
-- [Task &ndash; 2D Polygon Representing Birds-Eye View of an Element](#1)
-- [CmdExtrusionAnalyzer](#2)
-- [Alternative Approaches to Determine 2D Element Outline](#3)
-- [Cmd2dBoolean](#4)
-- [CmdRoomOuterOutline](#5)
-- [Author](#6)
-- [License](#7)
+- [Task &ndash; 2D polygon representing birds-eye view of an element](#2)
+- [CmdExtrusionAnalyzer](#3)
+- [Alternative approaches to determine 2D element outline](#4)
+- [Cmd2dBoolean](#5)
+- [CmdRoomOuterOutline](#6)
+- [Author](#7)
+- [License](#8)
 
 The add-in implements three external commands:
 
-- [CmdExtrusionAnalyzer](#2) &ndash; generate element outline using `ExtrusionAnalyzer`
-- [Cmd2dBoolean](#4) &ndash; generate element outline using 2D Booleans
-- [CmdRoomOuterOutline](#5) &ndash; outer room outline using 2D Booleans
+- [CmdExtrusionAnalyzer](#3) &ndash; generate element outline using `ExtrusionAnalyzer`
+- [Cmd2dBoolean](#5) &ndash; generate element outline using 2D Booleans
+- [CmdRoomOuterOutline](#6) &ndash; outer room outline using 2D Booleans
 
-All three generate element outlines of various types in varius ways.
+All three generate element outlines of various types in various ways.
 
 The first uses the Revit API and 
 the [`ExtrusionAnalyzer` class](https://www.revitapidocs.com/2020/ba9e3283-6868-8834-e8bf-2ea9e7358930.htm).
@@ -29,7 +29,7 @@ the [Clipper integer coordinate based 2D Boolean operations library](http://angu
 The add-in also implements a bunch of utilities for converting Revit coordinates to 2D data in millimetre units and displaying the resulting element outlines in a Windows form.
 
 
-## <a name="1"></a>Task &ndash; 2D Polygon Representing Birds-Eye View of an Element
+## <a name="2"></a>Task &ndash; 2D Polygon Representing Birds-Eye View of an Element
 
 The goal is to export the 2D outlines of Revit `Element` instances, i.e., for each element, associate its element id or unique id with the list of X,Y coordinates describing a polygon representing the visual birds-eye view look of its outline.
 
@@ -60,7 +60,7 @@ Toilets:
 In end effect, we generate a dictionary mapping an element id or unique id to a list of space delimited pairs of X Y vertex coordinates in millimetres.
 
 
-## <a name="2"></a>CmdExtrusionAnalyzer
+## <a name="3"></a>CmdExtrusionAnalyzer
 
 This code was originally implemented as part of (and later extracted from)
 the [RoomEditorApp project](https://github.com/jeremytammik/RoomEditorApp).
@@ -94,12 +94,12 @@ Here is an sample model with four elements highlighted in blue:
 
 For them, the CmdExtrusionAnalyzer command generates the following JSON file defeining their outline polygon in SVG format:
 
-```
+<pre>
 {"name":"pt2+20+7", "id":"576786", "uid":"bc43ed2e-7e23-4f0e-9588-ab3c43f3d388-0008cd12", "svg_path":"M-56862 -9150 L-56572 -9150 -56572 -14186 -56862 -14186Z"}
 {"name":"pt70/210", "id":"576925", "uid":"bc43ed2e-7e23-4f0e-9588-ab3c43f3d388-0008cd9d", "svg_path":"M-55672 -11390 L-55672 -11290 -55656 -11290 -55656 -11278 -55087 -11278 -55087 -11270 -55076 -11270 -55076 -11242 -55182 -11242 -55182 -11214 -55048 -11214 -55048 -11270 -55037 -11270 -55037 -11278 -54988 -11278 -54988 -11290 -54972 -11290 -54972 -11390Z"}
 {"name":"pt80/115", "id":"576949", "uid":"bc43ed2e-7e23-4f0e-9588-ab3c43f3d388-0008cdb5", "svg_path":"M-56572 -10580 L-56572 -9430 -55772 -9430 -55772 -10580Z"}
 {"name":"מנוע מזגן מפוצל", "id":"576972", "uid":"bc43ed2e-7e23-4f0e-9588-ab3c43f3d388-0008cdcc", "svg_path":"M-56753 -8031 L-56713 -8031 -56713 -8018 -56276 -8018 -56276 -8031 -56265 -8031 -56265 -8109 -56276 -8109 -56276 -8911 -56252 -8911 -56252 -8989 -56276 -8989 -56276 -9020 -56277 -9020 -56278 -9020 -56711 -9020 -56713 -9020 -56713 -8989 -56753 -8989 -56753 -8911 -56713 -8911 -56713 -8109 -56753 -8109Z"}
-```
+</pre>
 
 `M`, `L` and `Z` stand for `moveto`, `lineto` and `close`, respectively. Repetitions of `L` can be omitted. Nice and succinct.
 
@@ -114,7 +114,7 @@ They responded that my `ExtrusionAnalyzer` approach seems like the best (and may
 Considering Cmd2dBoolean, I might add the caveat 'using the Revit API' to the last statement.
 
 
-## <a name="3"></a>Alternative Approaches to Determine 2D Element Outline
+## <a name="4"></a>Alternative Approaches to Determine 2D Element Outline
 
 The `ExtrusionAnalyzer` approach based on element solids does not successfully address the task of generating the 2D birds-eye view outline for all Revit elements.
 
@@ -124,12 +124,8 @@ Concave hull:
 
 - http://ubicomp.algoritmi.uminho.pt/local/concavehull.html
 - https://towardsdatascience.com/the-concave-hull-c649795c0f0f
-- /a/src/cpp/MIConvexHull/
 - https://github.com/kubkon/powercrust
-- /a/src/cpp/powercrust/
-- 2D concave hull implementation: /a/src/cpp/concaveman-cpp/src/main/cpp/
 - https://adared.ch/concaveman-cpp-a-very-fast-2d-concave-hull-maybe-even-faster-with-c-and-python/
-- https://en.wikipedia.org/wiki/Alpha_shape
 - https://www.codeproject.com/Articles/1201438/The-Concave-Hull-of-a-Set-of-Points
 - http://www.cs.ubc.ca/research/flann/
   
@@ -142,17 +138,13 @@ Concave hull:
 - https://stackoverflow.com/questions/4213117/the-generalization-of-bentley-ottmann-algorithm
 - https://ggolikov.github.io/bentley-ottman/
 - Joining unordered line segments &ndash; https://stackoverflow.com/questions/1436091/joining-unordered-line-segments
-- join all line segments into closed polygons
-- union all the polygons using clipper
-- List&lt;IntPoint2d&gt; vertices;
-- List&lt;Pair&lt;int,int&gt;&gt; segments;
-- Dictionary&lt;IntPoint2d,int&gt; map_end_point_to_segments_both_directions;
 - http://www3.cs.stonybrook.edu/~algorith/implement/sweep/implement.shtml
 - https://github.com/mikhaildubov/Computational-geometry/blob/master/2)%20Any%20segments%20intersection/src/ru/dubov/anysegmentsintersect/SegmentsIntersect.java
 - https://github.com/jeremytammik/wykobi/blob/master/wykobi_naive_group_intersections.inl
 
 Alpha shape:
 
+- https://en.wikipedia.org/wiki/Alpha_shape
 - https://pypi.org/project/alphashape/
 - https://alphashape.readthedocs.io/
 
@@ -164,10 +156,13 @@ I worked on a 2D contour outline following algorithm, but it turned out quite co
 
 I had another idea for a much simpler approach using 2D Boolean operations, uniting all the solid faces and mesh faces into one single 2D polygon set.
 
+- Join all line segments into closed polygons
+- Union all the polygons using Clipper
+
 Thast seems to return robust results.
 
 
-## <a name="4"></a>Cmd2dBoolean
+## <a name="5"></a>Cmd2dBoolean
 
 I completed a new poly2d implementation using 2D Booleans instead of the solids and extrusion analyser.
 I expect it is significantly faster.
@@ -178,9 +173,9 @@ Maybe meshes and solids cover all requirements.
 I am still experimenting and testing.
 What is missing besided meshes and solids?
 
-I now tested successfully on an intercom element.
+I tested successfully on an intercom element.
 It is not a mesh, just a circle, represented by a full closed arc.
-I implemented support to include that as well in the Boolean operation.
+I implemented support to include circles as well as solids and meshes in the Boolean operation.
 
 I also implemented a utility `GeoSnoop` to display the loops generated in a temporary Windows form.
 
@@ -194,7 +189,7 @@ Note the differences in the intercom and the bathtub drain.
 
 My target is to continue enhancing the 2D Booleans until they include all the solid loop information, so that we can then get rid of the solid and extrusion analyser code.
 
-Maybe all I need to do is to use LevelOfDetail=Fine?
+Maybe all I need to do is to use LevelOfDetail = Fine?
 
 ```
   Options opt = new Options
@@ -212,21 +207,21 @@ In fact, right now, I think all I need is there, in the combination of the two a
 The first image was generated by capturing data from a 2D view.
 Capturing the 2D Booleans from a 3D view gives us all we need, I think.
 
-Feedback: we trested a few use-cases and it seems to be working fine.
+Tested a few use-cases and it seems to be working fine.
 
-Currently, the production pipeline uses an implementation in Python using
+Currently, the production pipeline uses an implementation in Python based on
 the [Shapely library](https://github.com/Toblerity/Shapely) for
-manipulation and analysis of geometric objects to union() the triangles. 
+manipulation and analysis of geometric objects to `union()` the triangles. 
 
-But it is slower, so I believe we will switch to Clipper.
+Since it is slower, it would be better to switch to Clipper.
 
 
-## <a name="5"></a>CmdRoomOuterOutline
+## <a name="6"></a>CmdRoomOuterOutline
 
 I implemented the third command `CmdRoomOuterOutline` after an unsuccesful attempt at generating the outer outline of a room including its bounding elements
 by [specifying a list of offsets to `CreateViaOffset`](https://thebuildingcoder.typepad.com/blog/2019/12/dashboards-createviaoffset-and-room-outline-algorithms.html#3).
 
-After that failed, I suggested a number of alternative approaches 
+After that failure, I suggested a number of alternative approaches 
 to [determine th room outline including surrounding walls](https://thebuildingcoder.typepad.com/blog/2019/12/dashboards-createviaoffset-and-room-outline-algorithms.html#4).
 
 **Question:** I started to look at the possibility of tracing the outside of the walls several weeks ago, when I was at a loss utilising `CreateViaOffset`.
